@@ -305,14 +305,70 @@ solution Rosen(matrix(*ff)(matrix, matrix, matrix), matrix x0, matrix s0, double
 	try
 	{
 		solution Xopt(x0);
-		int i=0;
+		
 		int n=get_dim(x0);
 		matrix dj=ident_mat(n);
 		matrix lamj(n,1);
 		matrix pj(n,1);
 		matrix s(s0);
-		
+		Xopt.fit_fun(ff,ud1,ud2);
+		while(true){
+			for(int j=0;j<n;j++){
+				solution f_x=(Xopt.x+s(j)*dj[j]);
+				f_x.fit_fun(ff,ud1,ud2);
+				if(f_x.y<Xopt.y){
+					Xopt=f_x;
+					lamj(j)+=s(j);
+					s(j)*=alpha;
+				}
+				else{
+					s(j)*=-beta;
+					pj(j)++;
+				}
 
+			}
+			
+			for(int j=0;j<n;j++){
+				if(lamj(j)!=0||pj(j)!=0){
+					matrix Q(n,n);
+					for(int i=0;i<n;i++){
+						for(int k=0;k<j+1;k++){
+							Q(i,k)=lamj(j);
+						}
+					}
+					s=s0;
+					lamj=matrix(n,1);
+					pj=matrix(n,1);
+					Q=Q*dj;
+					matrix v(n,1);
+					v=Q[0];
+					dj.set_col(v/norm(v),0);
+					for(int i=1;i<n;i++){
+						matrix suma(n,1);
+						for(int k=0;k<j;k++){
+							suma=suma+(trans(Q[j])*dj[k])*dj[k];
+						}
+						v=Q[j]-suma;
+						dj.set_col(v/norm(v),i);
+					}
+					break;
+				}
+			}
+			double smax=abs(s(0));
+			for(int j=1;j<n;j++){
+				if(smax<abs(s(j))){
+					smax=abs(s(j));
+				}
+			}
+			if(smax<epsilon){
+				Xopt.flag=0;
+				break;
+			}
+			if(solution::f_calls>Nmax){
+				Xopt.flag=1;
+				return Xopt;
+			}
+		}
 
 		return Xopt;
 	}
