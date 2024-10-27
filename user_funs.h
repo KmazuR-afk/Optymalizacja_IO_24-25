@@ -10,4 +10,5 @@ matrix ff1T(matrix, matrix = NAN, matrix = NAN);
 matrix ff1L(matrix, matrix = NAN, matrix = NAN);
 matrix ff1R(matrix, matrix = NAN, matrix = NAN);
 matrix df1R(double, matrix, matrix = NAN, matrix = NAN);
-matrix ff2T(matrix, matrix=NAN, matrix = NAN);
+matrix ff2T(matrix, matrix = NAN, matrix = NAN);
+matrix ff2R(matrix , matrix = NAN,matrix = NAN);

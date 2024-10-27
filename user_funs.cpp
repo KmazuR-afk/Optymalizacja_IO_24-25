@@ -100,3 +100,16 @@ matrix ff2T(matrix x, matrix ud1, matrix ud2) {
 	matrix y=pow(x(0),2)+pow(x(1),2)-cos(2.5*M_PI*x(0))-cos(2.5*M_PI*x(1))+2;
 	return y;
 }
+
+matrix ff2R(matrix x, matrix ud1,matrix ud2){
+	matrix Y,Msqr;
+	matrix Y0(2,1);
+	matrix *dY=solve_ode(df2R,0, 0.1,100,Y0,ud1,x);
+	int len=get_len(dY[0]);
+
+	for (int i=0;i<len;i++){
+		Msqr=pow(x(0)*(ud1(0)-dY[1](i,0))+x(1)*(ud1(1)-dY[1](i,1)),2);
+		Y=Y+10*pow(ud1(0)-dY[1](i,0),2)+pow(ud1(1)-dY[1](i,1))+Msqr;
+	}
+	return Y*0.1;
+}
