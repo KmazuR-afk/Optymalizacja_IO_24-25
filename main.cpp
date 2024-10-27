@@ -11,8 +11,9 @@ Data ostatniej modyfikacji: 19.09.2023
 #define _USE_MATH_DEFINES
 #include"opt_alg.h"
 #include"math.h"
-#include<vector>
+#include<cstdlib>
 #include<cstdio>
+
 
 void lab0();
 void lab1();
@@ -129,7 +130,15 @@ void lab1()
 
 void lab2()
 {
-	
+	srand(time(NULL));
+	int Nmax=1e6;
+	solution hj_result;
+	matrix x0(2,1);
+	matrix ud1(2,new double[2]{3.14,0});
+	double s=0.1,epsilon=1e-3,alpha_hj=0.5;
+	x0=matrix(2, new double[2]{0. -0.4});
+	hj_result=HJ(ff2T,x0,0.5,alpha_hj,epsilon,Nmax,ud1);
+	std::cout<< x0(0) << ";" << x0(1) << ";" << hj_result.x(0) << ";" << hj_result.x(1) << ";" << hj_result.y(0) << ";" << ";min;";
 }
 
 void lab3()

@@ -304,8 +304,15 @@ solution Rosen(matrix(*ff)(matrix, matrix, matrix), matrix x0, matrix s0, double
 {
 	try
 	{
-		solution Xopt;
-		//Tu wpisz kod funkcji
+		solution Xopt(x0);
+		int i=0;
+		int n=get_dim(x0);
+		matrix dj=ident_mat(n);
+		matrix lamj(n,1);
+		matrix pj(n,1);
+		matrix s(s0);
+		
+
 
 		return Xopt;
 	}

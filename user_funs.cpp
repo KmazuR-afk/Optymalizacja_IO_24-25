@@ -96,7 +96,7 @@ matrix df1R(double t, matrix Y, matrix ud1, matrix ud2) {
 	return dY;
 }
 
-matrix ff2T(matrix x1, matrix x2, matrix ud1, matrix ud2) {
-	matrix y=pow(x1,2)+pow(x2,2)-cos(2.5*M_PI*x1(0))-cos(2.5*M_PI*x2(0))+2;
+matrix ff2T(matrix x, matrix ud1, matrix ud2) {
+	matrix y=pow(x(0),2)+pow(x(1),2)-cos(2.5*M_PI*x(0))-cos(2.5*M_PI*x(1))+2;
 	return y;
 }
