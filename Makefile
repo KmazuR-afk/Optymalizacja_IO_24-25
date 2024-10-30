@@ -1,8 +1,15 @@
-# Nazwa pliku wykonywalnego
-#w Windowsie
-EXECUTABLE = program.exe
-#w Linuxie
-#EXECUTABLE = program
+# Nazwa pliku wykonywalnego, zależna od systemu operacyjnego
+ifeq ($(OS),Windows_NT)
+    EXECUTABLE = program.exe
+    RM = del /Q
+    RUN_CMD = $(EXECUTABLE)
+    CLEAR_CMD = cls
+else
+    EXECUTABLE = program
+    RM = rm -f
+    RUN_CMD = ./$(EXECUTABLE)
+    CLEAR_CMD = clear
+endif
 
 # Kompilator
 CXX = g++
@@ -33,7 +40,7 @@ all: $(EXECUTABLE)
 
 # Reguła kompilacji pliku wykonywalnego
 $(EXECUTABLE): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ && cls
+	$(CXX) $(CXXFLAGS) -o $@ $^ && $(CLEAR_CMD)
 
 # Reguła kompilacji plików .o z plików .cpp
 %.o: %.cpp $(HEADERS)
@@ -41,16 +48,11 @@ $(EXECUTABLE): $(OBJS)
 
 # Dodanie reguły uruchamiania programu
 run: $(EXECUTABLE)
-#w Windowsie
-	$(EXECUTABLE) && del /Q *.o $(EXECUTABLE)
-#w Linuxie
-#      ./$(EXECUTABLE) && rm -f *.o $(EXECUTABLE)
+	$(RUN_CMD) && $(RM) *.o $(EXECUTABLE)
 
 # Czyszczenie plików .o i pliku wykonywalnego
 clean:
-#w windowsie
-	del /Q *.o *.csv $(EXECUTABLE)
-#w Linuxie
-#       rm -f *.o *.csv $(EXECUTABLE)
+	$(RM) *.o *.csv $(EXECUTABLE)
+
 # Phony targets to avoid conflicts with files of the same name
 .PHONY: all clean run
