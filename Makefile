@@ -33,7 +33,7 @@ all: $(EXECUTABLE)
 
 # Reguła kompilacji pliku wykonywalnego
 $(EXECUTABLE): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) -o $@ $^ && cls
 
 # Reguła kompilacji plików .o z plików .cpp
 %.o: %.cpp $(HEADERS)
