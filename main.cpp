@@ -138,6 +138,7 @@ void lab2()
 	double s=0.1,epsilon=1e-3,alpha_hj=0.5;
 	x0=matrix(2, new double[2]{0. -0.4});
 	hj_result=HJ(ff2T,x0,0.5,alpha_hj,epsilon,Nmax,ud1);
+	//wydruk w kolejsności x1_0, x2_0, x1_k, x2_k, y_k
 	std::cout<< x0(0) << ";" << x0(1) << ";" << hj_result.x(0) << ";" << hj_result.x(1) << ";" << hj_result.y(0) << ";" << ";min;";
 }
 
