@@ -1,5 +1,5 @@
 #include"user_funs.h"
-#include <corecrt_math_defines.h>
+#include <cmath>
 
 
 matrix ff0T(matrix x, matrix ud1, matrix ud2)
@@ -99,7 +99,7 @@ matrix df1R(double t, matrix Y, matrix ud1, matrix ud2) {
 }
 
 matrix ff2T(matrix x, matrix ud1, matrix ud2) {
-	matrix y=pow(x(0),2)+pow(x(1),2)-cos(2.5*M_PI*x(0))-cos(2.5*M_PI*x(1))+2;
+	matrix y=pow(x(0),2)+pow(x(1),2)-cos(2.5*3.14*x(0))-cos(2.5*3.14*x(1))+2;
 	return y;
 }
 

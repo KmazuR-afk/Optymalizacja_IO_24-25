@@ -1,5 +1,8 @@
 # Nazwa pliku wykonywalnego
-EXECUTABLE = program
+#w Windowsie
+EXECUTABLE = program.exe
+#w Linuxie
+#EXECUTABLE = program
 
 # Kompilator
 CXX = g++
@@ -38,10 +41,16 @@ $(EXECUTABLE): $(OBJS)
 
 # Dodanie reguły uruchamiania programu
 run: $(EXECUTABLE)
-	./$(EXECUTABLE) && rm -f *.o program
+#w Windowsie
+	$(EXECUTABLE) && del /Q *.o $(EXECUTABLE)
+#w Linuxie
+#      ./$(EXECUTABLE) && rm -f *.o $(EXECUTABLE)
+
 # Czyszczenie plików .o i pliku wykonywalnego
 clean:
-	rm -f *.o *.csv program
-
+#w windowsie
+	del /Q *.o *.csv $(EXECUTABLE)
+#w Linuxie
+#       rm -f *.o *.csv $(EXECUTABLE)
 # Phony targets to avoid conflicts with files of the same name
 .PHONY: all clean run
