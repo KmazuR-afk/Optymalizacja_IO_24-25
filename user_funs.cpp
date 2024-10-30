@@ -1,6 +1,6 @@
 #include"user_funs.h"
 #include <cmath>
-
+#define M_PI 3.14159265359
 
 matrix ff0T(matrix x, matrix ud1, matrix ud2)
 {
@@ -41,8 +41,7 @@ matrix ff1T(matrix x, matrix ud1, matrix ud2) {
 	return y;
 }
 matrix ff1L(matrix x, matrix ud1, matrix ud2) {
-	double PI = 3.14;
-	matrix y = -cos(0.1 * x(0)) * exp(-pow(0.1 * x(0) - 2 * PI, 2)) + 0.002 * pow(0.1 * x(0), 2);
+	matrix y = -cos(0.1 * x(0)) * exp(-pow(0.1 * x(0) - 2 * M_PI, 2)) + 0.002 * pow(0.1 * x(0), 2);
 	return y;
 
 }
@@ -99,7 +98,7 @@ matrix df1R(double t, matrix Y, matrix ud1, matrix ud2) {
 }
 
 matrix ff2T(matrix x, matrix ud1, matrix ud2) {
-	matrix y=pow(x(0),2)+pow(x(1),2)-cos(2.5*3.14*x(0))-cos(2.5*3.14*x(1))+2;
+	matrix y=pow(x(0),2)+pow(x(1),2)-cos(2.5*M_PI*x(0))-cos(2.5*M_PI*x(1))+2;
 	return y;
 }
 
