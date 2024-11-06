@@ -47,7 +47,7 @@ matrix ff1L(matrix x, matrix ud1, matrix ud2) {
 }
 matrix ff1R(matrix x, matrix ud1, matrix ud2) {
 	matrix y;
-	matrix Y0 = matrix(3, new double[3] { 5,1,10 });
+	matrix Y0 = matrix(3, new double[3] { 5,1,20 });
 	matrix* Y = solve_ode(df1R, 0, 1, 2000, Y0, ud1, x);
 	int n = get_len(Y[0]);
 	double max = Y[1](0, 2);
