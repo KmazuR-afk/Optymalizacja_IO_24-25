@@ -219,21 +219,29 @@ solution HJ(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double alp
 {
 	try
 	{
+		//ofstream wykres("./wykres.csv"); //do wykresu
+
 		solution Xopt;
 		solution XB(x0);
-		Xopt=HJ_trial(ff,x0,s);
-		Xopt.fit_fun(ff);
-		XB.fit_fun(ff);
+		Xopt=HJ_trial(ff,x0,s, ud1, ud2);
+		Xopt.fit_fun(ff, ud1, ud2);
+		XB.fit_fun(ff, ud1, ud2);
+
+		//wykres << XB.x(0) << ";" << XB.x(1) << ";" << Xopt.y << ";" << endl;   //do wykresu
 		while(true){
+			//Xopt.fit_fun(ff);   //do wykresu
+			//wykres << Xopt.x(0) << ";" << Xopt.x(1) << ";" << Xopt.y << ";" << endl;
+			XB = Xopt;
+			Xopt = HJ_trial(ff, XB, s, ud1, ud2);
 			if(Xopt.y<XB.y){
 				solution X_B;
 				while(true){
 					X_B=XB;
 					XB=Xopt;
 					Xopt.x=2*XB.x-X_B.x;
-					Xopt=HJ_trial(ff,Xopt,s);
-					XB.fit_fun(ff);
-					Xopt.fit_fun(ff);
+					XB.fit_fun(ff, ud1, ud2);
+					Xopt.fit_fun(ff, ud1, ud2);
+					Xopt=HJ_trial(ff,Xopt,s, ud1, ud2);
 					if(solution::f_calls>Nmax){
 						cout<<"przekroczono maksymalną ilość wywołania funkcji\n";
 						Xopt.flag=0;
@@ -245,6 +253,7 @@ solution HJ(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double alp
 					}	
 				}
 				Xopt=XB;
+				Xopt.fit_fun(ff, ud1, ud2);
 			}
 			else{
 				s*=alpha;
@@ -255,11 +264,15 @@ solution HJ(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double alp
 				return NULL;
 			}
 			if(s<epsilon){
+				Xopt = XB;
 				Xopt.flag=1;
 				break;
 			}
 		}
-		Xopt.fit_fun(ff);
+		Xopt.fit_fun(ff, ud1, ud2);
+		//wykres << Xopt.x(0) << ";" << Xopt.x(1) << ";" << Xopt.y << ";" << endl; //do wykresu
+		//wykres.close();
+
 		return Xopt;
 	}
 	catch (string ex_info)
@@ -275,22 +288,21 @@ solution HJ_trial(matrix(*ff)(matrix, matrix, matrix), solution XB, double s, ma
 		int dim=get_dim(XB);
 		solution X;
 		matrix e=ident_mat(dim);
-		XB.fit_fun(ff);
-		for(int j=0;j<dim-1;j++){
+		XB.fit_fun(ff, ud1, ud2);
+		for(int j=0;j<dim;j++){
 			X.x=XB.x+s*e[j];
-			X.fit_fun(ff);
+			X.fit_fun(ff, ud1, ud2);
 			if(X.y<XB.y){
 				XB=X;
 			}
 			else{
-				X.x=XB.x-2*s*e[j];
-				X.fit_fun(ff);
+				X.x=XB.x-s*e[j];
+				X.fit_fun(ff, ud1, ud2);
 				if(X.y<XB.y){
 					XB=X;
 				}
 			}
 		}
-
 
 		return XB;
 	}
@@ -304,74 +316,94 @@ solution Rosen(matrix(*ff)(matrix, matrix, matrix), matrix x0, matrix s0, double
 {
 	try
 	{
+		//ofstream wykres1("./wykres1.csv");   //do wykresu
+
 		solution Xopt(x0);
-		
-		int n=get_dim(x0);
+		int n=get_dim(Xopt);
 		matrix dj=ident_mat(n);
 		matrix lamj(n,1);
 		matrix pj(n,1);
 		matrix s(s0);
 		Xopt.fit_fun(ff,ud1,ud2);
-		while(true){
-			for(int j=0;j<n;j++){
-				solution f_x=(Xopt.x+s(j)*dj[j]);
-				f_x.fit_fun(ff,ud1,ud2);
-				if(f_x.y<Xopt.y){
-					Xopt=f_x;
-					lamj(j)+=s(j);
-					s(j)*=alpha;
+		while (true) {
+			Xopt.fit_fun(ff, ud1, ud2);
+			//wykres1 << Xopt.x(0) << ";" << Xopt.x(1) << ";" << Xopt.y << ";" << endl;    //do wykresu
+			for (int j = 0; j < n; j++) {
+				solution f_x;
+				f_x.x = Xopt.x + s(j) * dj[j];
+				f_x.fit_fun(ff, ud1, ud2);
+				if (f_x.y < Xopt.y) {
+					Xopt = f_x;
+					lamj(j) += s(j);
+					s(j) *= alpha;
 				}
-				else{
-					s(j)*=-beta;
+				else {
+					s(j) *= -beta;
 					pj(j)++;
 				}
 
 			}
-			
-			for(int j=0;j<n;j++){
-				if(lamj(j)!=0||pj(j)!=0){
-					matrix Q(n,n);
-					for(int i=0;i<n;i++){
-						for(int k=0;k<j+1;k++){
-							Q(i,k)=lamj(j);
-						}
-					}
-					s=s0;
-					lamj=matrix(n,1);
-					pj=matrix(n,1);
-					Q=Q*dj;
-					matrix v(n,1);
-					v=Q[0];
-					dj.set_col(v/norm(v),0);
-					for(int i=1;i<n;i++){
-						matrix suma(n,1);
-						for(int k=0;k<j;k++){
-							suma=suma+(trans(Q[j])*dj[k])*dj[k];
-						}
-						v=Q[j]-suma;
-						dj.set_col(v/norm(v),i);
-					}
+
+			bool check = true;
+			for (int j = 0; j < n; j++) {
+				if (lamj(j) == 0 || pj(j) == 0) {
+					check = false;
 					break;
 				}
 			}
-			double smax=abs(s(0));
-			for(int j=1;j<n;j++){
-				if(smax<abs(s(j))){
-					smax=abs(s(j));
+			if (check) {
+				matrix Q(n, n);
+				for (int i = 0; i < n; i++) {
+					for (int k = 0; k < i + 1; k++) {
+						Q(i, k) = lamj(i);
+					}
+				}
+				
+				Q = Q * dj;
+				matrix v(n, 1);
+				v = Q[0];
+				dj.set_col(v / norm(v), 0);
+				for (int i = 1; i < n; i++) {
+					matrix suma(n, 1);
+					for (int k = 0; k < i; k++) {
+						suma = suma + (trans(Q[i]) * dj[k]) * dj[k];
+					}
+					v = Q[i] - suma;
+					dj.set_col(v / norm(v), i);
+				}
+				s = s0;
+				lamj = matrix(n, 1);
+				pj = matrix(n, 1);
+			}
+
+			double smax = abs(s(0));
+			for (int j = 1; j < n; j++) {
+				if (smax < abs(s(j))) {
+					smax = abs(s(j));
 				}
 			}
-			if(smax<epsilon){
-				Xopt.flag=0;
+			if (smax < epsilon) {
+				Xopt.flag = 0;
 				break;
 			}
-			if(solution::f_calls>Nmax){
-				Xopt.flag=1;
+			if (solution::f_calls > Nmax) {
+				Xopt.flag = 1;
+				Xopt.fit_fun(ff, ud1, ud2);
+
+				//wykres1 << Xopt.x(0) << ";" << Xopt.x(1) << ";" << Xopt.y << ";" << endl;    //do wykresu
+				//wykres1.close(); 
+
 				return Xopt;
 			}
 		}
+		Xopt.fit_fun(ff, ud1, ud2);
+
+		//wykres1 << Xopt.x(0) << ";" << Xopt.x(1) << ";" << Xopt.y << ";" << endl;    //do wykresu
+		//wykres1.close();
 
 		return Xopt;
 	}
+
 	catch (string ex_info)
 	{
 		throw ("solution Rosen(...):\n" + ex_info);
