@@ -14,6 +14,8 @@ Data ostatniej modyfikacji: 19.09.2023
 #include<cstdlib>
 #include<cstdio>
 
+#define PI 3.14
+
 
 void lab0();
 void lab1();
@@ -131,15 +133,99 @@ void lab1()
 void lab2()
 {
 	srand(time(NULL));
+
 	int Nmax=1e6;
-	solution hj_result;
 	matrix x0(2,1);
-	matrix ud1(2,new double[2]{3.14,0});
-	double s=0.1,epsilon=1e-3,alpha_hj=0.5;
-	x0=matrix(2, new double[2]{0. -0.4});
-	hj_result=HJ(ff2T,x0,0.5,alpha_hj,epsilon,Nmax,ud1);
+	double s = 0.01 + (rand() % 200) / 100.0;
+
+	//s = 0.59; //do wykresu
+
+	double epsilon = 1e-3, alpha_hj = 0.6, alpha_rs = 1.3, beta = 0.4;
+	matrix sol = matrix(2,1,0.0);
+	matrix s_wek = matrix(2, 1, s);
+	cout << s << endl;
+
+	ofstream HJToFile("./hj.csv");
+	ofstream RSToFile("./rs.csv");
+
+	/*for (int i = 0; i < 100; i++) {       //tabele 1-2
+		sol = 2 * rand_mat(2, 1) - 1;
+
+		solution solv_hj = HJ(ff2T, sol, s, alpha_hj, epsilon, Nmax);
+		int ck = solution::f_calls;
+		HJToFile << sol(0) << ";" << sol(1) << ";" << solv_hj.x(0) << ";" << solv_hj.x(1) << ";" << solv_hj.y(0) << ";" << solution::f_calls << ";" << endl;
+		solution::clear_calls();
+
+		solution solv_rs = Rosen(ff2T, sol, s_wek, alpha_rs, beta, epsilon, Nmax);
+		ck = solution::f_calls;
+		RSToFile << sol(0) << ";" << sol(1) << ";" << solv_rs.x(0) << ";" << solv_rs.x(1) << ";" << solv_rs.y(0) << ";" << solution::f_calls << ";" << endl;
+		solution::clear_calls();
+		
+	}*/
+
+	/*sol(0) = -0.973332;  //do wykresu
+	sol(1) = -0.0686693;
+	solution solv_hj = HJ(ff2T, sol, s, alpha_hj, epsilon, Nmax);
+	solution solv_rs = Rosen(ff2T, sol, s_wek, alpha_rs, beta, epsilon, Nmax);*/
+
+	HJToFile.close();
+	RSToFile.close();
+
+
+	///////////////////////////////////////////////////SYMULACJA///////////////////////////////////////////////
+
+	//x0 = 10 * rand_mat(2, 1);
+	x0 = matrix(2, 1, 5.0);
+	s = 0.1;
+	s_wek = matrix(2, 1, s);
+	matrix ud1(2, new double[2] {PI, 0});
+
+	//////////////////////////////////SPRAWDZENIE_WG_INSTRUKCJI////////////////////////////////////////////////
+	//matrix Y = ff2R(x0, ud1);
+	//cout << Y << endl;
+	
 	//wydruk w kolejsności x1_0, x2_0, x1_k, x2_k, y_k
-	std::cout<< x0(0) << ";" << x0(1) << ";" << hj_result.x(0) << ";" << hj_result.x(1) << ";" << hj_result.y(0) << ";" << ";min;";
+	//std::cout<< x0(0) << ";" << x0(1) << ";" << hj_result.x(0) << ";" << hj_result.x(1) << ";" << hj_result.y(0) << ";" << ";min;";
+
+
+	///////////////////////////////////SYMULACJA_WL//////////////////////////////////////////////////////////
+	solution::clear_calls();
+	x0 = 10 * rand_mat(2, 1);
+
+	cout << "Rozpoczynam zapisywanie do pliku Symulacja.csv..." << endl;
+
+	ofstream Hooke_RToFile("./Hooke_RToFile.csv");
+	ofstream Rosen_BToFile("./Rosen_BToFile.csv");
+
+	s = 0.1;
+	matrix s0 = matrix(2, 1, s);
+
+	cout << x0 << endl << endl;
+
+	solution Hooke_R = HJ(ff2R, x0, s, alpha_hj, epsilon, Nmax, ud1);
+
+	matrix Y = ff2R(Hooke_R.x, ud1);
+	cout << Hooke_R.x << endl;
+	cout << Y << endl;
+	cout << solution::f_calls << endl;
+	solution::clear_calls();
+
+	matrix Y0 = matrix(2, 1);
+	matrix* YzHooke = solve_ode(df2R, 0, 0.1, 100, Y0, ud1, Hooke_R.x);
+	Hooke_RToFile << YzHooke[1] << endl;
+
+	solution Rosen_B = Rosen(ff2R, x0, s0, alpha_rs, beta, epsilon, Nmax, ud1);
+
+	Y = ff2R(Rosen_B.x, ud1);
+	cout << Rosen_B.x << endl;
+	cout << Y << endl;
+	cout << solution::f_calls << endl;
+
+	matrix* YzRosen = solve_ode(df2R, 0, 0.1, 100, Y0, ud1, Rosen_B.x);
+	Rosen_BToFile << YzRosen[1] << endl;
+
+	Hooke_RToFile.close();
+	Rosen_BToFile.close();
 }
 
 void lab3()
