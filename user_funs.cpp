@@ -110,9 +110,9 @@ matrix ff2R(matrix x, matrix ud1,matrix ud2){
 
 	for (int i=0;i<len;i++){
 		Msqr=pow(x(0)*(ud1(0)-dY[1](i,0))+x(1)*(ud1(1)-dY[1](i,1)),2);
-		Y=Y+10*pow(ud1(0)-dY[1](i,0),2)+pow(ud1(1)-dY[1](i,1))+Msqr;
+		Y=Y+(10*pow(ud1(0)-dY[1](i,0),2)+pow(ud1(1)-dY[1](i,1),2)+Msqr)*0.1;
 	}
-	return Y*0.1;
+	return Y;
 }
 
 matrix df2R(double t , matrix y, matrix ud1, matrix ud2){
@@ -120,7 +120,7 @@ matrix df2R(double t , matrix y, matrix ud1, matrix ud2){
 	int mr=1;
 	int mc=5;
 	double b=0.5;
-	double I=(mr*pow(l,2))/3+mc*pow(l,2);
+	double I=(mr*pow(l,2)/3)+mc*pow(l,2);
 	matrix dY(2,1);
 	dY(0)=y(1);
 	dY(1)=(ud2(0)*(ud1(0)-y(0))+ud2(1)*(ud1(1)-y(1))-b*y(1))/I;
