@@ -223,49 +223,49 @@ solution HJ(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double alp
 
 		solution Xopt;
 		solution XB(x0);
-		Xopt=HJ_trial(ff,x0,s, ud1, ud2);
+		Xopt = HJ_trial(ff, x0, s, ud1, ud2);
 		Xopt.fit_fun(ff, ud1, ud2);
 		XB.fit_fun(ff, ud1, ud2);
 
 		//wykres << XB.x(0) << ";" << XB.x(1) << ";" << Xopt.y << ";" << endl;   //do wykresu
-		while(true){
+		while (true) {
 			//Xopt.fit_fun(ff);   //do wykresu
 			//wykres << Xopt.x(0) << ";" << Xopt.x(1) << ";" << Xopt.y << ";" << endl;
 			XB = Xopt;
 			Xopt = HJ_trial(ff, XB, s, ud1, ud2);
-			if(Xopt.y<XB.y){
+			if (Xopt.y < XB.y) {
 				solution X_B;
-				while(true){
-					X_B=XB;
-					XB=Xopt;
-					Xopt.x=2*XB.x-X_B.x;
+				while (true) {
+					X_B = XB;
+					XB = Xopt;
+					Xopt.x = 2 * XB.x - X_B.x;
 					XB.fit_fun(ff, ud1, ud2);
 					Xopt.fit_fun(ff, ud1, ud2);
-					Xopt=HJ_trial(ff,Xopt,s, ud1, ud2);
-					if(solution::f_calls>Nmax){
-						cout<<"przekroczono maksymalną ilość wywołania funkcji\n";
-						Xopt.flag=0;
+					Xopt = HJ_trial(ff, Xopt, s, ud1, ud2);
+					if (solution::f_calls > Nmax) {
+						cout << "przekroczono maksymalną ilość wywołania funkcji\n";
+						Xopt.flag = 0;
 						return NULL;
 					}
-					else if (Xopt.y>=XB.y)
+					else if (Xopt.y >= XB.y)
 					{
 						break;
-					}	
+					}
 				}
-				Xopt=XB;
+				Xopt = XB;
 				Xopt.fit_fun(ff, ud1, ud2);
 			}
-			else{
-				s*=alpha;
+			else {
+				s *= alpha;
 			}
-			if(solution::f_calls>Nmax){
-				cout<<"przekroczono maksymalną ilość wywołania funkcji\n";
-				Xopt.flag=0;
+			if (solution::f_calls > Nmax) {
+				cout << "przekroczono maksymalną ilość wywołania funkcji\n";
+				Xopt.flag = 0;
 				return NULL;
 			}
-			if(s<epsilon){
+			if (s < epsilon) {
 				Xopt = XB;
-				Xopt.flag=1;
+				Xopt.flag = 1;
 				break;
 			}
 		}
@@ -285,21 +285,21 @@ solution HJ_trial(matrix(*ff)(matrix, matrix, matrix), solution XB, double s, ma
 {
 	try
 	{
-		int dim=get_dim(XB);
+		int dim = get_dim(XB);
 		solution X;
-		matrix e=ident_mat(dim);
+		matrix e = ident_mat(dim);
 		XB.fit_fun(ff, ud1, ud2);
-		for(int j=0;j<dim;j++){
-			X.x=XB.x+s*e[j];
+		for (int j = 0; j < dim; j++) {
+			X.x = XB.x + s * e[j];
 			X.fit_fun(ff, ud1, ud2);
-			if(X.y<XB.y){
-				XB=X;
+			if (X.y < XB.y) {
+				XB = X;
 			}
-			else{
-				X.x=XB.x-s*e[j];
+			else {
+				X.x = XB.x - s * e[j];
 				X.fit_fun(ff, ud1, ud2);
-				if(X.y<XB.y){
-					XB=X;
+				if (X.y < XB.y) {
+					XB = X;
 				}
 			}
 		}
@@ -319,12 +319,12 @@ solution Rosen(matrix(*ff)(matrix, matrix, matrix), matrix x0, matrix s0, double
 		//ofstream wykres1("./wykres1.csv");   //do wykresu
 
 		solution Xopt(x0);
-		int n=get_dim(Xopt);
-		matrix dj=ident_mat(n);
-		matrix lamj(n,1);
-		matrix pj(n,1);
+		int n = get_dim(Xopt);
+		matrix dj = ident_mat(n);
+		matrix lamj(n, 1);
+		matrix pj(n, 1);
 		matrix s(s0);
-		Xopt.fit_fun(ff,ud1,ud2);
+		Xopt.fit_fun(ff, ud1, ud2);
 		while (true) {
 			Xopt.fit_fun(ff, ud1, ud2);
 			//wykres1 << Xopt.x(0) << ";" << Xopt.x(1) << ";" << Xopt.y << ";" << endl;    //do wykresu
@@ -358,7 +358,7 @@ solution Rosen(matrix(*ff)(matrix, matrix, matrix), matrix x0, matrix s0, double
 						Q(i, k) = lamj(i);
 					}
 				}
-				
+
 				Q = Q * dj;
 				matrix v(n, 1);
 				v = Q[0];
@@ -413,10 +413,34 @@ solution Rosen(matrix(*ff)(matrix, matrix, matrix), matrix x0, matrix s0, double
 solution pen(matrix(*ff)(matrix, matrix, matrix), matrix x0, double c, double dc, double epsilon, int Nmax, matrix ud1, matrix ud2)
 {
 	try {
-		solution Xopt;
-		//Tu wpisz kod funkcji
 
+		double gamma = 2.0;  //z prezentacji
+		double beta = 0.5;  //z prezentacji
+		double delta = 0.5;  //z prezentacji
+
+		double alfa = 0.4;//?
+		double s = 0.8;//?
+
+		solution Xopt;
+		solution X1;
+		solution X2(x0);
+
+		while (true) {
+			X1 = sym_NM(ff, X1.x, s, alfa, beta, gamma, delta, epsilon, Nmax, ud1, c);
+			c = c * dc; //dc to dalsze c? czy pomnozyc przezz alfa?
+			if (solution::f_calls > Nmax) {
+				Xopt = X1;
+				Xopt.flag = 1;
+				return Xopt;
+			}
+			if (norm(X1.x - X2.x) < epsilon) {
+				Xopt = X1;
+				break;
+			}
+			X2 = X1;
+		}
 		return Xopt;
+
 	}
 	catch (string ex_info)
 	{
@@ -429,7 +453,100 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 	try
 	{
 		solution Xopt;
-		//Tu wpisz kod funkcji
+		int wymiar = get_dim(x0); //ustawiam na sztywno 3, badam funkcję 3 zmiennych
+		matrix e = ident_mat(wymiar);
+		solution* p = new solution[wymiar + 1]; //????
+		p[0].x = x0;
+		p[0].fit_fun(ff, ud1, ud2);
+		for (int i = 1; i <= wymiar; i++) {
+			p[i].x = p[0].x + s * e[i - 1];
+			p[i].fit_fun(ff, ud1, ud2);
+		}
+
+
+		while (true) {
+			int min = 0;
+			int max = 1;
+
+			for (int i = 0; i < (wymiar + 1); i++) {
+				if (p[i].y < p[min].y) {
+					min = i;
+				}
+			}
+
+			for (int i = 0; i < (wymiar + 1); i++) {
+				if (p[i].y > p[max].y and i != min) {
+					max = i;
+				}
+			}
+
+			matrix p_sr(wymiar, 1);
+			for (int i = 0; i < (wymiar + 1); i++) {
+				if (i != max) {
+					p_sr = p_sr + p[i].x;
+				}
+			}
+			p_sr = p_sr / wymiar;
+			solution p_odb;
+			p_odb.x = p_sr + alpha * (p_sr - p[max].x);
+			p_odb.fit_fun(ff, ud1, ud2);
+
+			if (p_odb.y < p[min].y) {
+				solution p_e;
+				p_e.x = p_sr + gamma * (p_odb.x - p_sr);
+				p_e.fit_fun(ff, ud1, ud2);
+				if (p_e.y < p_odb.y) {
+					p[max] = p_e.x;
+				}
+				else {
+					p[max] = p_odb.x;
+				}
+			}
+			else {
+				if (p_odb.y >= p[min].y and p_odb.y < p[max].y) {
+					p[max].x = p_odb.x;
+				}
+				else {
+					solution pz;
+					pz.x = p_sr + beta * (p[max].x - p_sr);
+					pz.fit_fun(ff, ud1, ud2);
+					if (pz.y >= p[max].y) {
+						for (int i = 0; i < (wymiar + 1); i++) {
+							if (i != min) {
+								p[i].x = delta * (p[i].x + p[min].x);
+							}
+						}
+					}
+					else {
+						p[max].x = pz.x;
+					}
+				}
+			}
+			p[min].fit_fun(ff, ud1, ud2);
+			p[max].fit_fun(ff, ud1, ud2);
+
+			if (solution::f_calls > Nmax) {
+				Xopt.x = p[min].x;
+				Xopt.fit_fun(ff, ud1, ud2);
+				Xopt.flag = 1;
+				return Xopt;
+			}
+
+			double max_spr = norm(p[min].x - p[0].x);
+			for (int i = 1; i < (wymiar + 1); i++) {
+				double new_max = norm(p[min].x - p[i].x);
+				if (new_max > max_spr) {
+					max_spr = new_max;
+				}
+			}
+
+			if (max_spr < epsilon) {
+				Xopt.x = p[min].x;
+				Xopt.fit_fun(ff, ud1, ud2);
+				Xopt.flag = 0;
+				break;
+			}
+		}
 
 		return Xopt;
 	}
