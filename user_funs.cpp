@@ -132,7 +132,7 @@ matrix ff3T(matrix x) {
 	return out;
 }
 
-//Kara zewnêtrzna
+//Kara zewnï¿½trzna
 matrix ff3T1(matrix x, matrix ud1, matrix ud2) {
 	matrix out = ff3T(x);
 	//nie daje max bo warunki zapewniaja mi > 0
@@ -148,7 +148,7 @@ matrix ff3T1(matrix x, matrix ud1, matrix ud2) {
 	return out;
 }
 
-//Kara wewnêtrzna
+//Kara wewnï¿½trzna
 matrix ff3T2(matrix x, matrix ud1, matrix ud2) {
 	matrix out = ff3T(x);
 	if (-x(0) + 1 <= 0) {
@@ -173,4 +173,48 @@ matrix ff3T2(matrix x, matrix ud1, matrix ud2) {
 	}
 
 	return out;
+}
+
+matrix ff3R(matrix x, matrix ud1, matrix ud2) {
+	matrix y;
+	matrix Y0(4,new double[4] {0,x(0),100,0});
+	matrix* Y=solve_ode(df3R,0,0.01,7,ud1,x);
+	int i50=0;
+	int i0=0;
+	for (int i =0;i<get_len(Y[0]);i++){
+		if((Y[1](i,2)-50)<(Y[1](i50,2)-50))	i50=i;
+		if(Y[1](i,2)<Y[1](i0,2))	i0=i;
+	}
+	y=-Y[1](i0,0);
+	if(abs(x(0))-10>0){
+		y=y+ud2*pow(abs(x(0))-10,2);
+	}
+	if(abs(x(1))-25>0){
+		y=y+ud2*pow(abs(x(1))-25,2);
+	}
+	if((abs(Y[1](i50,0))-5)-0.5>0){
+		y=y+ud2*pow((abs(Y[1](i50,0))-5)-0.5,2);
+	}
+
+	return y;
+}
+
+matrix df3R(double t, matrix y, matrix ud1, matrix ud2) {
+	matrix dY(4,1);//dx,d^2x,dy...
+	double g=9.81;//m/s^2
+	double m=0.6;//kg
+	double C=0.47;
+	double ro=1.2;//kg/m^3
+	double r=0.12;//m
+	double S=M_PI*pow(r,2);
+	double Dx=0.5*C*ro*S*y(1)*abs(y(1));
+	double Dy=0.5*C*ro*S*y(3)*abs(y(3));
+	double Fmx=ro*y(3)*ud2(0)*M_PI*pow(r,3);
+	double Fmy=ro*y(1)*ud2(0)*M_PI*pow(r,3);
+	dY(0)=y(1);
+	dY(2)=y(3);
+	dY(1)=-(Dx+Fmx)/m;
+	dY(3)=-(Dy+Fmy)/m-g;
+
+	return dY;
 }
