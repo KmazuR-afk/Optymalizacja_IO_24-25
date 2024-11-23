@@ -186,16 +186,16 @@ matrix ff3R(matrix x, matrix ud1, matrix ud2) {
 		if(Y[1](i,2)<Y[1](i0,2))	i0=i;
 	}
 	y=-Y[1](i0,0);
-	if(abs(x(0))-10>0){
+	if(abs(x(0))-10>0){//kara dla prędkości
 		y=y+ud2*pow(abs(x(0))-10,2);
 	}
-	if(abs(x(1))-25>0){
-		y=y+ud2*pow(abs(x(1))-25,2);
+	if(abs(x(1))-15>0){//kara dla omegi
+		y=y+ud2*pow(abs(x(1))-15,2);
 	}
-	if((abs(Y[1](i50,0))-5)-0.5>0){
+	if((abs(Y[1](i50,0))-5)-0.5>0){//kara za nie wpadnięcie do kosza
 		y=y+ud2*pow((abs(Y[1](i50,0))-5)-0.5,2);
 	}
-
+	std::cout<<Y[1]<<endl;
 	return y;
 }
 

@@ -261,7 +261,7 @@ void lab3()
 	cout << s2.x(0) << "  " << s2.x(1) << "  " << s2.y << "  " << ile_c2 << endl;*/
 
 	//Plik CSV- testowanie funkcji celu
-	ofstream TestToFile("./test_3.csv");
+	/*ofstream TestToFile("./test_3.csv");
 	
 	for (int i = 0; i < 100; i++) {
 		sol = rand_mat(2, 1); //losowanie z przedziału [0,1] dla x1 i x2
@@ -285,7 +285,23 @@ void lab3()
 		TestToFile << sol(0) << ";" << sol(1) << ";" << s1.x(0) << ";" << s1.x(1) << ";" << norm(s1.x) << ";" << s1.y << ";" << fc_s1 << ";" << s2.x(0) << ";" << s2.x(1) << ";" << norm(s2.x) << ";" << s2.y << ";" << fc_s2 << endl;
 	}
 
-	TestToFile.close();
+	TestToFile.close();*/
+	//////////////////////////////////SPRAWDZENIE_WG_INSTRUKCJI////////////////////////////////////////////////
+
+	matrix x0 = matrix(2, new double[2]{0,0});
+	cout<<x0<<endl;
+	solution NM = pen(ff3R, x0, 1., 2, epsilon, Nmax, NAN, c);
+	cout << NM << endl;
+
+	matrix Y0;
+	matrix* Y;
+
+	Y0 = matrix(4, new double[4] {0, NM.x(0), 100, 0});
+	Y = solve_ode(df3R, 0, 0.01, 7, Y0, NAN, NM.x(1));
+
+	cout << Y[1] << endl;
+
+
 
 }
 
