@@ -287,21 +287,25 @@ void lab3()
 
 	TestToFile.close();*/
 	//////////////////////////////////SPRAWDZENIE_WG_INSTRUKCJI////////////////////////////////////////////////
-
-	matrix x0 = matrix(2, new double[2]{0,0});
-	cout<<x0<<endl;
-	solution NM = pen(ff3R, x0, 1., 2, epsilon, Nmax, NAN, c);
-	cout << NM << endl;
-
+	/*matrix Y0;
+	matrix* Y;
+	Y0 = matrix(4, new double[4] {0,5, 100, 0});
+	Y = solve_ode(df3R, 0, 0.01, 7, Y0, NAN, 10);
+	cout << Y[1] << endl;//po przeskrolowaniu widzimy 21,53; 7,65557; 50,1628; -20,885; oraz 41,4079; 9,43686; -0,00666495; -22,3301;*/
+	//////////////////////////////////Symulacja optymalizacja////////////////////////////////////////////////
+	ofstream Symulacje("sym_3.csv");
+	matrix x0(2,new double[2]{5,-2.5});
+	solution sv=pen(ff3R,x0,1,2,epsilon,Nmax,NAN,c);
+	Symulacje<<sv<<endl;
+	Symulacje.close();
+	
+	Symulacje.open("sym_4.csv");
 	matrix Y0;
 	matrix* Y;
-
-	Y0 = matrix(4, new double[4] {0, NM.x(0), 100, 0});
-	Y = solve_ode(df3R, 0, 0.01, 7, Y0, NAN, NM.x(1));
-
-	cout << Y[1] << endl;
-
-
+	Y0 = matrix(4, new double[4] {0,sv.x(0), 100, 0});
+	Y = solve_ode(df3R, 0, 0.01, 7, Y0, NAN, sv.x(1));
+	Symulacje<<Y[1]<<endl;
+	Symulacje.close();
 
 }
 

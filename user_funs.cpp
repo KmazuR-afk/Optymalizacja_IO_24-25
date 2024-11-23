@@ -178,7 +178,7 @@ matrix ff3T2(matrix x, matrix ud1, matrix ud2) {
 matrix ff3R(matrix x, matrix ud1, matrix ud2) {
 	matrix y;
 	matrix Y0(4,new double[4] {0,x(0),100,0});
-	matrix* Y=solve_ode(df3R,0,0.01,7,ud1,x);
+	matrix* Y=solve_ode(df3R,0,0.01,7,Y0,ud1,x(1));
 	int i50=0;
 	int i0=0;
 	for (int i =0;i<get_len(Y[0]);i++){
@@ -195,7 +195,7 @@ matrix ff3R(matrix x, matrix ud1, matrix ud2) {
 	if((abs(Y[1](i50,0))-5)-0.5>0){//kara za nie wpadnięcie do kosza
 		y=y+ud2*pow((abs(Y[1](i50,0))-5)-0.5,2);
 	}
-	std::cout<<Y[1]<<endl;
+
 	return y;
 }
 
