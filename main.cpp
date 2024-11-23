@@ -13,6 +13,7 @@ Data ostatniej modyfikacji: 19.09.2023
 #include"math.h"
 #include<cstdlib>
 #include<cstdio>
+#include <cmath>
 
 #define PI 3.14
 
@@ -29,7 +30,7 @@ int main()
 {
 	try
 	{
-		lab2();
+		lab3();
 	}
 	catch (string EX_INFO)
 	{
@@ -230,6 +231,57 @@ void lab2()
 
 void lab3()
 {
+	srand(time(NULL));
+	//Część tych parametrow trzeba incjować w pen
+	double gamma = 2.0;  //z prezentacji
+	double beta = 0.5;  //z prezentacji
+	double delta = 0.5;  //z prezentacji
+	double alfa = 1.0;//?
+	double s = 0.5;//?
+	double c = 1.0;
+	double dc1 = 2.0;
+	double dc2 = 0.5;
+	double epsilon = 1e-3; //z instrukcji
+	int Nmax = 1e6;
+
+	double a[3];
+	a[0] = 4.0;
+	a[1] = 4.4934;
+	a[2] = 5.0;
+	matrix sol = matrix(2, 1, 0.0);
+
+	/*s1 = pen(ff3T1, sol, 1, 2, epsilon, Nmax, a[0]);
+	int ile_c = solution::f_calls;
+	solution::clear_calls();
+	s2 = pen(ff3T2, sol, 1, 0.5, epsilon, Nmax, a[0]);
+	int ile_c2 = solution::f_calls;
+	solution::clear_calls();
+	cout << s1.x(0) << "  " << s1.x(1) << "  " << s1.y << "  " << ile_c <<endl;
+	cout << s2.x(0) << "  " << s2.x(1) << "  " << s2.y << "  " << ile_c2 << endl;*/
+
+	//Plik CSV- testowanie funkcji celu
+	ofstream TestToFile("./test_3.csv");
+	for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < 100; i++) {
+			sol = rand_mat(1, 2); //losowanie z przedziału [0,1] dla x1 i x2
+			double ogr1 = sqrt(pow(a[j], 2) - 1);
+			sol(0) = sol(0) * (ogr1 - 1); //x1 od 0 do ogr1 -1 
+			sol(0) = 1 + sol(0); //x1 od 1 do ogr1
+			double ogr2 = sqrt(pow(a[j], 2) - pow(sol(0), 2)); //dopasuj x2 względem wylosowanego x1
+			sol(1) = sol(1) * (ogr2 - 1); //x2 od 0 do ogr2 -1 
+			sol(1) = 1 + sol(1); //x2 od 1 do ogr2
+			//Koniec losowania, dalej wywołania funkcji
+
+			solution s1, s2;
+			s1 = pen(ff3T1, sol, c, dc1, epsilon, Nmax, matrix(a[0]));
+			int fc_s1 = solution::f_calls;
+			solution::clear_calls();
+
+			s2 = pen(ff3T2, sol, c, dc2, epsilon, Nmax, matrix(a[0]));
+			int fc_s2 = solution::f_calls;
+			solution::clear_calls();
+		}
+	}
 
 }
 

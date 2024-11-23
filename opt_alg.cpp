@@ -418,15 +418,15 @@ solution pen(matrix(*ff)(matrix, matrix, matrix), matrix x0, double c, double dc
 		double beta = 0.5;  //z prezentacji
 		double delta = 0.5;  //z prezentacji
 
-		double alfa = 0.4;//?
-		double s = 0.8;//?
+		double alfa = 1.0;//?
+		double s = 0.5;//?
 
 		solution Xopt;
 		solution X1;
 		solution X2(x0);
 
 		while (true) {
-			X1 = sym_NM(ff, X1.x, s, alfa, beta, gamma, delta, epsilon, Nmax, ud1, c);
+			X1 = sym_NM(ff, X2.x, s, alfa, beta, gamma, delta, epsilon, Nmax, ud1, c);
 			c = c * dc; //dc to dalsze c? czy pomnozyc przezz alfa?
 			if (solution::f_calls > Nmax) {
 				Xopt = X1;
@@ -439,6 +439,7 @@ solution pen(matrix(*ff)(matrix, matrix, matrix), matrix x0, double c, double dc
 			}
 			X2 = X1;
 		}
+		Xopt.fit_fun(ff, ud1, c);
 		return Xopt;
 
 	}
@@ -453,9 +454,9 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 	try
 	{
 		solution Xopt;
-		int wymiar = get_dim(x0); //ustawiam na sztywno 3, badam funkcję 3 zmiennych
+		int wymiar = get_dim(x0); //dla nas zawsze 2 (bo dwie zmienne x1, x2)
 		matrix e = ident_mat(wymiar);
-		solution* p = new solution[wymiar + 1]; //????
+		solution* p = new solution[wymiar + 1]; //ale potrzemubjemy tablicy o wymiarze 3
 		p[0].x = x0;
 		p[0].fit_fun(ff, ud1, ud2);
 		for (int i = 1; i <= wymiar; i++) {
@@ -466,19 +467,21 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 
 		while (true) {
 			int min = 0;
-			int max = 1;
+			int max = 0;
 
-			for (int i = 0; i < (wymiar + 1); i++) {
+			for (int i = 1; i < (wymiar + 1); i++) {
 				if (p[i].y < p[min].y) {
 					min = i;
 				}
-			}
-
-			for (int i = 0; i < (wymiar + 1); i++) {
-				if (p[i].y > p[max].y and i != min) {
+				if (p[i].y > p[max].y) {
 					max = i;
 				}
 			}
+		
+			if (min == max) {
+				max = (min == 0) ? 1 : 0;  //Wybierz inny indeks niż min
+			}
+
 
 			matrix p_sr(wymiar, 1);
 			for (int i = 0; i < (wymiar + 1); i++) {
@@ -486,7 +489,7 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 					p_sr = p_sr + p[i].x;
 				}
 			}
-			p_sr = p_sr / wymiar;
+			p_sr = p_sr / wymiar; //przez wymiar (tj.2 bo omijamy i == max)
 			solution p_odb;
 			p_odb.x = p_sr + alpha * (p_sr - p[max].x);
 			p_odb.fit_fun(ff, ud1, ud2);
@@ -496,14 +499,14 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 				p_e.x = p_sr + gamma * (p_odb.x - p_sr);
 				p_e.fit_fun(ff, ud1, ud2);
 				if (p_e.y < p_odb.y) {
-					p[max] = p_e.x;
+					p[max].x = p_e.x;
 				}
 				else {
-					p[max] = p_odb.x;
+					p[max].x = p_odb.x;
 				}
 			}
 			else {
-				if (p_odb.y >= p[min].y and p_odb.y < p[max].y) {
+				if (p_odb.y >= p[min].y && p_odb.y < p[max].y) {
 					p[max].x = p_odb.x;
 				}
 				else {
@@ -514,6 +517,7 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 						for (int i = 0; i < (wymiar + 1); i++) {
 							if (i != min) {
 								p[i].x = delta * (p[i].x + p[min].x);
+								p[i].fit_fun(ff, ud1, ud2);
 							}
 						}
 					}

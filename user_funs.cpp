@@ -155,21 +155,21 @@ matrix ff3T2(matrix x, matrix ud1, matrix ud2) {
 		out = out - ud2 / (-x(0) + 1);
 	}
 	else {
-		out = pow(10, 14);
+		out = 1000000000;
 	}
 
 	if (-x(1) + 1 <= 0) {
 		out = out - ud2 / (-x(1) + 1);
 	}
 	else {
-		out = pow(10, 14);
+		out = 1000000000;
 	}
 
 	if (norm(x) - ud1 <= 0) {
-		out = out - ud2 / (norm(x) - ud1);
+		out = out - ud2 / (norm(x) - ud1); //?
 	}
 	else {
-		out = pow(10, 14);
+		out = 1000000000;
 	}
 
 	return out;

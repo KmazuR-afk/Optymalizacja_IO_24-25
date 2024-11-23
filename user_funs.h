@@ -13,3 +13,6 @@ matrix df1R(double, matrix, matrix = NAN, matrix = NAN);
 matrix ff2T(matrix, matrix = NAN, matrix = NAN);
 matrix ff2R(matrix , matrix = NAN,matrix = NAN);
 matrix df2R(double, matrix, matrix = NAN, matrix = NAN);
+matrix ff3T(matrix);
+matrix ff3T1(matrix, matrix = NAN, matrix = NAN);
+matrix ff3T2(matrix, matrix = NAN, matrix = NAN);
