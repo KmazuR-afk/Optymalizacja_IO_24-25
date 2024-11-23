@@ -418,8 +418,8 @@ solution pen(matrix(*ff)(matrix, matrix, matrix), matrix x0, double c, double dc
 		double beta = 0.5;  //z prezentacji
 		double delta = 0.5;  //z prezentacji
 
-		double alfa = 1.0;//?
-		double s = 0.5;//?
+		double alfa = 1.0;  //rozszerzenie sympleksu
+		double s = 0.4;  //rozmiar początkowy sympleksu - około 0.1 zakresu poszukwiań
 
 		solution Xopt;
 		solution X1;
