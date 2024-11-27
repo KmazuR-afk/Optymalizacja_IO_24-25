@@ -251,17 +251,17 @@ void lab3()
 	a[2] = 5.0;
 	matrix sol = matrix(2, 1, 0.0);
 
-	/*s1 = pen(ff3T1, sol, 1, 2, epsilon, Nmax, a[0]);
+	solution s1 = pen(ff3T1, sol, 1, 2, epsilon, Nmax, a[0]);
 	int ile_c = solution::f_calls;
 	solution::clear_calls();
-	s2 = pen(ff3T2, sol, 1, 0.5, epsilon, Nmax, a[0]);
+	solution s2 = pen(ff3T2, sol, 1, 0.5, epsilon, Nmax, a[0]);
 	int ile_c2 = solution::f_calls;
 	solution::clear_calls();
 	cout << s1.x(0) << "  " << s1.x(1) << "  " << s1.y << "  " << ile_c <<endl;
-	cout << s2.x(0) << "  " << s2.x(1) << "  " << s2.y << "  " << ile_c2 << endl;*/
+	cout << s2.x(0) << "  " << s2.x(1) << "  " << s2.y << "  " << ile_c2 << endl;
 
 	//Plik CSV- testowanie funkcji celu
-	/*ofstream TestToFile("./test_3.csv");
+	ofstream TestToFile("./test_3.csv");
 	
 	for (int i = 0; i < 100; i++) {
 		sol = rand_mat(2, 1); //losowanie z przedziału [0,1] dla x1 i x2
@@ -285,7 +285,7 @@ void lab3()
 		TestToFile << sol(0) << ";" << sol(1) << ";" << s1.x(0) << ";" << s1.x(1) << ";" << norm(s1.x) << ";" << s1.y << ";" << fc_s1 << ";" << s2.x(0) << ";" << s2.x(1) << ";" << norm(s2.x) << ";" << s2.y << ";" << fc_s2 << endl;
 	}
 
-	TestToFile.close();*/
+	TestToFile.close();
 	//////////////////////////////////SPRAWDZENIE_WG_INSTRUKCJI////////////////////////////////////////////////
 	/*matrix Y0;
 	matrix* Y;
