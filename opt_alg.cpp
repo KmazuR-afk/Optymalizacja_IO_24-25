@@ -564,12 +564,13 @@ solution SD(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, mat
 {
 	try
 	{
+		solution::clear_calls();
 		solution Xopt(x0);
 		int n=get_dim(x0);
 		solution X0,d(x0);
 		matrix H(n,2),h;//macierz wykorzytsywana do wyznaczania zmiennej wysokości - (x0,d)
 		while(true){
-			X0.x=Xopt.x;
+			
 			d.x=-Xopt.grad(gf,ud1,ud2);//wyznaczanie di
 			if(h0<=0){//wyznacz wysokość
 				H.set_col(Xopt.x,0);
@@ -579,8 +580,9 @@ solution SD(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, mat
 			else{
 				h=h0;
 			}
+			X0=Xopt;
 			Xopt.x=X0.x+d.x*h;
-			if(solution::f_calls>Nmax){
+			if(solution::f_calls>Nmax||solution::g_calls>Nmax){
 				Xopt.flag=1;
 				Xopt.fit_fun(ff,ud1,ud2);
 				return Xopt;
@@ -602,19 +604,20 @@ solution CG(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, mat
 {
 	try
 	{
+		solution::clear_calls();
 		solution Xopt(x0);
 		int n=get_dim(x0);
-		solution X0,d(x0),d0;
+		solution X0(x0),d,d0;
 		matrix H(n,2),h;
-		double beta=0.0;
+		int i=0;
 		while(true){
-			X0.x=Xopt.x;
 			d0.x=d.x;
 			d.x=-Xopt.grad(gf,ud1,ud2);
-			if(d0.x!=x0){
-				beta=pow(norm(Xopt.g),2)/pow(norm(X0.g),2);
+			if(i!=0){
+				double beta=pow(norm(Xopt.g), 2) / pow(norm(X0.g), 2);
 				d.x=d.x+d0.x*beta;
 			}
+			i++;
 			if(h0<=0){//wyznacz wysokość
 				H.set_col(Xopt.x,0);
 				H.set_col(d.x,1);
@@ -623,13 +626,14 @@ solution CG(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, mat
 			else{
 				h=h0;
 			}
+			X0=Xopt;
 			Xopt.x=X0.x+d.x*h;
-			if(solution::f_calls>Nmax){
+			if(solution::f_calls>Nmax || solution::g_calls>Nmax){
 				Xopt.flag=1;
 				Xopt.fit_fun(ff,ud1,ud2);
 				return Xopt;
 			}
-			if(norm(Xopt.x-X0.x)<epsilon){
+			if(norm(Xopt.x - X0.x)<epsilon){
 				Xopt.fit_fun(ff,ud1,ud2);
 				return Xopt;
 			}
@@ -648,9 +652,10 @@ solution Newton(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix,
 {
 	try
 	{
+		solution::clear_calls();
 		solution Xopt(x0);
 		int n=get_dim(x0);
-		solution X0,d(x0);
+		solution X0,d;
 		matrix H(n,2),h;//macierz wykorzytsywana do wyznaczania zmiennej wysokości - (x0,d)
 		while(true){
 			X0.x=Xopt.x;
@@ -664,7 +669,7 @@ solution Newton(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix,
 				h=h0;
 			}
 			Xopt.x=X0.x+d.x*h;
-			if(solution::f_calls>Nmax){
+			if(solution::f_calls>Nmax||solution::g_calls>Nmax||solution::H_calls>Nmax){
 				Xopt.flag=1;
 				Xopt.fit_fun(ff,ud1,ud2);
 				return Xopt;
@@ -696,16 +701,18 @@ solution golden(matrix(*ff)(matrix, matrix, matrix), double a, double b, double 
 		while(true){
 
 			if(C.y<D.y){
-				B=D;
-				D=C;
-				C=B.x-alfa*(B.x-A.x);
+				B.x=D.x;
+				D.x=C.x;
+				C.x=B.x-alfa*(B.x-A.x);
 				C.fit_fun(ff,ud1,ud2);
+				D.fit_fun(ff,ud1,ud2);
 			}
 			else{
-				A=C;
-				C=D;
-				D=B.x+alfa*(B.x-A.x);
+				A.x=C.x;
+				C.x=D.x;
+				D.x=B.x+alfa*(B.x-A.x);
 				D.fit_fun(ff,ud1,ud2);
+				C.fit_fun(ff,ud1,ud2);
 			}
 			if(solution::f_calls>Nmax){
 				Xopt.flag=1;
@@ -713,7 +720,7 @@ solution golden(matrix(*ff)(matrix, matrix, matrix), double a, double b, double 
 				Xopt.fit_fun(ff,ud1,ud2);
 				return Xopt;
 			}
-			if(A.x-B.x<epsilon){
+			if(B.x-A.x<epsilon){
 				Xopt.flag=0;
 				Xopt=(A.x+B.x)/2;
 				Xopt.fit_fun(ff,ud1,ud2);

@@ -311,7 +311,45 @@ void lab3()
 
 void lab4()
 {
+	double epsilon = 0.001;
+	int Nmax = 10000;
+	double s[3] = { 0.05, 0.12, 0};
+	solution sd, cg, newton;
+	int sd_f_calls, sd_g_calls, cg_f_calls, cg_g_calls, newton_f_calls, newton_g_calls, newton_H_calls;
+	matrix x0;
 
+
+	ofstream myfile;
+	myfile.open("optymalizacja_4_t1.csv");
+	for(int j=0;j<3;j++){
+		for (int i = 0; i < 100; i++) {
+			double x_[] = { (double)((rand() % 200) / 10.) - 10., (double)((rand() % 200) / 10.) - 10. };
+			x0 = matrix(2, x_);
+
+			sd = SD(ff4T, gf4T, x0, s[j], epsilon, Nmax);
+			sd_f_calls = solution::f_calls;
+			sd_g_calls = solution::g_calls;
+
+			cg = CG(ff4T, gf4T, x0, s[j], epsilon, Nmax);
+			cg_f_calls = solution::f_calls;
+			cg_g_calls = solution::g_calls;
+
+			newton = Newton(ff4T, gf4T, Hf4T, x0, s[j], epsilon, Nmax);
+			newton_f_calls = solution::f_calls;
+			newton_g_calls = solution::g_calls;
+			newton_H_calls = solution::H_calls;
+
+
+			myfile << x0(0) << ";" << x0(1) << ";"
+				<< sd.x(0) << ";" << sd.x(1) << ";" << sd.y(0) << ";" << sd_f_calls << ";" << sd_g_calls << ";"
+				<< cg.x(0) << ";" << cg.x(1) << ";" << cg.y(0) << ";" << cg_f_calls << ";" << cg_g_calls << ";"
+				<< newton.x(0) << ";" << newton.x(1) << ";" << newton.y(0) << ";" << newton_f_calls << ";" << newton_g_calls << ";" << newton_H_calls << endl;
+			
+		}
+	}
+	myfile.close();
+
+	
 }
 
 void lab5()

@@ -218,3 +218,29 @@ matrix df3R(double t, matrix y, matrix ud1, matrix ud2) {
 
 	return dY;
 }
+
+matrix ff4T(matrix x,matrix ud1,matrix ud2) {
+	matrix y;
+	if(isnan(ud2(0,0))){
+		y=pow((x(0)+2*x(1)-7),2)+pow((2*x(0)+x(1)-5),2);
+	}
+	else{
+		y = ff4T(ud2[0] + x * ud2[1], ud1);
+	}
+	return y;
+}
+matrix gf4T(matrix x,matrix ud1,matrix ud2) {
+	matrix Xprim(2,1);
+	Xprim(0)=10.0*x(0)+8.0*x(1)-34.0;
+	Xprim(1)=8.0*x(0)+10.0*x(1)-38.0;
+	return Xprim;
+}
+matrix Hf4T(matrix x, matrix ud1, matrix ud2)
+{
+	matrix y(2, 2);
+	y(0, 0) = 10.0;
+	y(0, 1) = 8.0;
+	y(1, 1) = 10.0;
+	y(1.0) = 8.0;
+	return y;
+}

@@ -18,3 +18,6 @@ matrix ff3T1(matrix, matrix = NAN, matrix = NAN);
 matrix ff3T2(matrix, matrix = NAN, matrix = NAN);
 matrix ff3R(matrix , matrix = NAN,matrix = NAN);
 matrix df3R(double, matrix, matrix = NAN, matrix = NAN);
+matrix ff4T(matrix, matrix = NAN, matrix = NAN);
+matrix gf4T(matrix, matrix = NAN, matrix = NAN);
+matrix Hf4T(matrix, matrix = NAN, matrix = NAN);
