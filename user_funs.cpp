@@ -182,8 +182,8 @@ matrix ff3R(matrix x, matrix ud1, matrix ud2) {
 	int i50=0;
 	int i0=0;
 	for (int i =0;i<get_len(Y[0]);i++){
-		if((Y[1](i,2)-50)<(Y[1](i50,2)-50))	i50=i;
-		if(Y[1](i,2)<Y[1](i0,2))	i0=i;
+		if(abs((Y[1](i,2)-50))<(abs(Y[1](i50,2)-50)))	i50=i;
+		if(abs(Y[1](i,2))<abs(Y[1](i0,2)))	i0=i;
 	}
 	y=-Y[1](i0,0);
 	if(abs(x(0))-10>0){//kara dla prędkości

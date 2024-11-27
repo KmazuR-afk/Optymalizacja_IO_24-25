@@ -294,7 +294,7 @@ void lab3()
 	cout << Y[1] << endl;//po przeskrolowaniu widzimy 21,53; 7,65557; 50,1628; -20,885; oraz 41,4079; 9,43686; -0,00666495; -22,3301;*/
 	//////////////////////////////////Symulacja optymalizacja////////////////////////////////////////////////
 	ofstream Symulacje("sym_3.csv");
-	matrix x0(2,new double[2]{5,-2.5});
+	matrix x0(2,new double[2]{-10,-15});
 	solution sv=pen(ff3R,x0,1,2,epsilon,Nmax,NAN,c);
 	Symulacje<<sv<<endl;
 	Symulacje.close();
