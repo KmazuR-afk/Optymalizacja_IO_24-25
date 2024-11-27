@@ -564,9 +564,32 @@ solution SD(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, mat
 {
 	try
 	{
-		solution Xopt;
-		//Tu wpisz kod funkcji
-
+		solution Xopt(x0);
+		int n=get_dim(x0);
+		solution X0,d(x0);
+		matrix H(n,2),h;//macierz wykorzytsywana do wyznaczania zmiennej wysokości - (x0,d)
+		while(true){
+			X0.x=Xopt.x;
+			d.x=-Xopt.grad(gf,ud1,ud2);//wyznaczanie di
+			if(h0<=0){//wyznacz wysokość
+				H.set_col(Xopt.x,0);
+				H.set_col(d.x,1);
+				h=golden(ff,0,1,epsilon,Nmax,ud1,H).x;
+			}
+			else{
+				h=h0;
+			}
+			Xopt.x=X0.x+d.x*h;
+			if(solution::f_calls>Nmax){
+				Xopt.flag=1;
+				Xopt.fit_fun(ff,ud1,ud2);
+				return Xopt;
+			}
+			if(norm(Xopt.x-X0.x)<epsilon){
+				Xopt.fit_fun(ff,ud1,ud2);
+				return Xopt;
+			}
+		}
 		return Xopt;
 	}
 	catch (string ex_info)
@@ -579,8 +602,38 @@ solution CG(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, mat
 {
 	try
 	{
-		solution Xopt;
-		//Tu wpisz kod funkcji
+		solution Xopt(x0);
+		int n=get_dim(x0);
+		solution X0,d(x0),d0;
+		matrix H(n,2),h;
+		double beta=0.0;
+		while(true){
+			X0.x=Xopt.x;
+			d0.x=d.x;
+			d.x=-Xopt.grad(gf,ud1,ud2);
+			if(d0.x!=x0){
+				beta=pow(norm(Xopt.g),2)/pow(norm(X0.g),2);
+				d.x=d.x+d0.x*beta;
+			}
+			if(h0<=0){//wyznacz wysokość
+				H.set_col(Xopt.x,0);
+				H.set_col(d.x,1);
+				h=golden(ff,0,1,epsilon,Nmax,ud1,H).x;
+			}
+			else{
+				h=h0;
+			}
+			Xopt.x=X0.x+d.x*h;
+			if(solution::f_calls>Nmax){
+				Xopt.flag=1;
+				Xopt.fit_fun(ff,ud1,ud2);
+				return Xopt;
+			}
+			if(norm(Xopt.x-X0.x)<epsilon){
+				Xopt.fit_fun(ff,ud1,ud2);
+				return Xopt;
+			}
+		}
 
 		return Xopt;
 	}
@@ -595,9 +648,32 @@ solution Newton(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix,
 {
 	try
 	{
-		solution Xopt;
-		//Tu wpisz kod funkcji
-
+		solution Xopt(x0);
+		int n=get_dim(x0);
+		solution X0,d(x0);
+		matrix H(n,2),h;//macierz wykorzytsywana do wyznaczania zmiennej wysokości - (x0,d)
+		while(true){
+			X0.x=Xopt.x;
+			d.x=-inv(Xopt.hess(Hf))*Xopt.grad(gf,ud1,ud2);//wyznaczanie di
+			if(h0<=0){//wyznacz wysokość
+				H.set_col(Xopt.x,0);
+				H.set_col(d.x,1);
+				h=golden(ff,0,1,epsilon,Nmax,ud1,H).x;
+			}
+			else{
+				h=h0;
+			}
+			Xopt.x=X0.x+d.x*h;
+			if(solution::f_calls>Nmax){
+				Xopt.flag=1;
+				Xopt.fit_fun(ff,ud1,ud2);
+				return Xopt;
+			}
+			if(norm(Xopt.x-X0.x)<epsilon){
+				Xopt.fit_fun(ff,ud1,ud2);
+				return Xopt;
+			}
+		}
 		return Xopt;
 	}
 	catch (string ex_info)
@@ -611,8 +687,39 @@ solution golden(matrix(*ff)(matrix, matrix, matrix), double a, double b, double 
 	try
 	{
 		solution Xopt;
-		//Tu wpisz kod funkcji
+		double alfa=(pow(5,0.5)-1)/2;
+		solution A(a),B(b);
+		solution C=B.x-alfa*(B.x-A.x);
+		solution D=B.x+alfa*(B.x-A.x);
+		C.fit_fun(ff,ud1,ud2);
+		D.fit_fun(ff,ud1,ud2);
+		while(true){
 
+			if(C.y<D.y){
+				B=D;
+				D=C;
+				C=B.x-alfa*(B.x-A.x);
+				C.fit_fun(ff,ud1,ud2);
+			}
+			else{
+				A=C;
+				C=D;
+				D=B.x+alfa*(B.x-A.x);
+				D.fit_fun(ff,ud1,ud2);
+			}
+			if(solution::f_calls>Nmax){
+				Xopt.flag=1;
+				Xopt=(A.x+B.x)/2;
+				Xopt.fit_fun(ff,ud1,ud2);
+				return Xopt;
+			}
+			if(A.x-B.x<epsilon){
+				Xopt.flag=0;
+				Xopt=(A.x+B.x)/2;
+				Xopt.fit_fun(ff,ud1,ud2);
+				return Xopt;
+			}
+		}
 		return Xopt;
 	}
 	catch (string ex_info)
