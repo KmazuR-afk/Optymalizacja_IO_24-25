@@ -321,7 +321,7 @@ void lab4()
 
 	ofstream myfile;
 	myfile.open("lab_4_t1.csv");
-	/*for(int j=0;j<3;j++){
+	for(int j=0;j<3;j++){
 		for (int i = 0; i < 100; i++) {
 			double x_[] = { (double)((rand() % 200) / 10.) - 10., (double)((rand() % 200) / 10.) - 10. };
 			x0 = matrix(2, x_);
@@ -346,8 +346,8 @@ void lab4()
 				<< newton.x(0) << ";" << newton.x(1) << ";" << newton.y(0) << ";" << newton_f_calls << ";" << newton_g_calls << ";" << newton_H_calls << endl;
 			
 		}
-	}*/
-	double x_[] = { (double)((rand() % 200) / 10.) - 10., (double)((rand() % 200) / 10.) - 10. };
+	}
+	/*double x_[] = { (double)((rand() % 200) / 10.) - 10., (double)((rand() % 200) / 10.) - 10. };
 	x0 = matrix(2, x_);
 	myfile<<"\t\tsd\n";
 	sd = SD(ff4T, gf4T, x0, s[2], epsilon, Nmax,NAN,NAN,&myfile);
@@ -355,7 +355,7 @@ void lab4()
 	cg = CG(ff4T, gf4T, x0, s[2], epsilon, Nmax,NAN,NAN,&myfile);
 	myfile<<"\t\tNewton\n";
 	newton = Newton(ff4T, gf4T, Hf4T, x0, s[2], epsilon, Nmax,NAN,NAN,&myfile);
-	myfile.close();
+	myfile.close();*/
 
 	//Część rzeczywista
 	//Test porpawności funkcji rzeczywistych

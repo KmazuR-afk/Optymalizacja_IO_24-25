@@ -591,7 +591,7 @@ solution SD(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, mat
 				Xopt.fit_fun(ff,ud1,ud2);
 				return Xopt;
 			}
-			if(*myfile){
+			if(myfile=nullptr){
 				*myfile<<Xopt.x(0)<<";"<<Xopt.x(1)<<endl;
 			}
 		}
@@ -640,7 +640,7 @@ solution CG(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, mat
 				Xopt.fit_fun(ff,ud1,ud2);
 				return Xopt;
 			}
-			if(*myfile){
+			if(myfile!=nullptr){
 				*myfile<<Xopt.x(0)<<";"<<Xopt.x(1)<<endl;
 			}
 		}
@@ -684,7 +684,7 @@ solution Newton(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix,
 				Xopt.fit_fun(ff,ud1,ud2);
 				return Xopt;
 			}
-			if(*myfile){
+			if(myfile!=nullptr){
 				*myfile<<Xopt.x(0)<<";"<<Xopt.x(1)<<endl;
 			}
 		}
