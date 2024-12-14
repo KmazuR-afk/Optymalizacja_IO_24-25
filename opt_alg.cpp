@@ -560,22 +560,22 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 	}
 }
 
-solution SD(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, matrix), matrix x0, double h0, double epsilon, int Nmax, matrix ud1, matrix ud2)
+solution SD(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, matrix), matrix x0, double h0, double epsilon, int Nmax, matrix ud1, matrix ud2,ofstream* myfile)
 {
 	try
 	{
 		solution::clear_calls();
 		solution Xopt(x0);
 		int n=get_dim(x0);
-		solution X0,d(x0);
+		solution X0(x0),d(x0);
 		matrix H(n,2),h;//macierz wykorzytsywana do wyznaczania zmiennej wysokości - (x0,d)
 		while(true){
-			
+			X0.x=d.x;
 			d.x=-Xopt.grad(gf,ud1,ud2);//wyznaczanie di
 			if(h0<=0){//wyznacz wysokość
 				H.set_col(Xopt.x,0);
 				H.set_col(d.x,1);
-				h=golden(ff,0,1,epsilon,Nmax,ud1,H).x;
+				h = golden(ff, 0, 1, epsilon, Nmax, ud1, H).x;
 			}
 			else{
 				h=h0;
@@ -591,6 +591,9 @@ solution SD(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, mat
 				Xopt.fit_fun(ff,ud1,ud2);
 				return Xopt;
 			}
+			if(*myfile){
+				*myfile<<Xopt.x(0)<<";"<<Xopt.x(1)<<endl;
+			}
 		}
 		return Xopt;
 	}
@@ -600,7 +603,7 @@ solution SD(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, mat
 	}
 }
 
-solution CG(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, matrix), matrix x0, double h0, double epsilon, int Nmax, matrix ud1, matrix ud2)
+solution CG(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, matrix), matrix x0, double h0, double epsilon, int Nmax, matrix ud1, matrix ud2,ofstream* myfile)
 {
 	try
 	{
@@ -637,6 +640,9 @@ solution CG(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, mat
 				Xopt.fit_fun(ff,ud1,ud2);
 				return Xopt;
 			}
+			if(*myfile){
+				*myfile<<Xopt.x(0)<<";"<<Xopt.x(1)<<endl;
+			}
 		}
 
 		return Xopt;
@@ -648,7 +654,7 @@ solution CG(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, mat
 }
 
 solution Newton(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix, matrix),
-	matrix(*Hf)(matrix, matrix, matrix), matrix x0, double h0, double epsilon, int Nmax, matrix ud1, matrix ud2)
+	matrix(*Hf)(matrix, matrix, matrix), matrix x0, double h0, double epsilon, int Nmax, matrix ud1, matrix ud2,ofstream* myfile)
 {
 	try
 	{
@@ -678,6 +684,9 @@ solution Newton(matrix(*ff)(matrix, matrix, matrix), matrix(*gf)(matrix, matrix,
 				Xopt.fit_fun(ff,ud1,ud2);
 				return Xopt;
 			}
+			if(*myfile){
+				*myfile<<Xopt.x(0)<<";"<<Xopt.x(1)<<endl;
+			}
 		}
 		return Xopt;
 	}
@@ -693,9 +702,10 @@ solution golden(matrix(*ff)(matrix, matrix, matrix), double a, double b, double 
 	{
 		solution Xopt;
 		double alfa=(pow(5,0.5)-1)/2;
-		solution A(a),B(b);
-		solution C=B.x-alfa*(B.x-A.x);
-		solution D=B.x+alfa*(B.x-A.x);
+		solution A(a);
+		solution B(b);
+		solution C(B.x-alfa*(B.x-A.x));
+		solution D(A.x+alfa*(B.x-A.x));
 		C.fit_fun(ff,ud1,ud2);
 		D.fit_fun(ff,ud1,ud2);
 		while(true){
@@ -710,23 +720,16 @@ solution golden(matrix(*ff)(matrix, matrix, matrix), double a, double b, double 
 			else{
 				A.x=C.x;
 				C.x=D.x;
-				D.x=B.x+alfa*(B.x-A.x);
+				D.x=A.x+alfa*(B.x-A.x);
 				D.fit_fun(ff,ud1,ud2);
 				C.fit_fun(ff,ud1,ud2);
 			}
-			if(solution::f_calls>Nmax){
-				Xopt.flag=1;
-				Xopt=(A.x+B.x)/2;
-				Xopt.fit_fun(ff,ud1,ud2);
-				return Xopt;
-			}
-			if(B.x-A.x<epsilon){
-				Xopt.flag=0;
-				Xopt=(A.x+B.x)/2;
-				Xopt.fit_fun(ff,ud1,ud2);
-				return Xopt;
+			if(solution::f_calls>Nmax || B.x-A.x<epsilon){
+				break;
 			}
 		}
+		Xopt.x=(A.x+B.x)/2;
+		Xopt.fit_fun(ff,ud1,ud2);
 		return Xopt;
 	}
 	catch (string ex_info)

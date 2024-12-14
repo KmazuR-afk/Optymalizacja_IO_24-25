@@ -311,17 +311,17 @@ void lab3()
 
 void lab4()
 {
-	/*double epsilon = 0.001;
+	double epsilon = 0.001;
 	int Nmax = 10000;
-	double s[3] = { 0.05, 0.12, 0};
+	double s[3] = { 0.05, 0.12, -1.0};
 	solution sd, cg, newton;
 	int sd_f_calls, sd_g_calls, cg_f_calls, cg_g_calls, newton_f_calls, newton_g_calls, newton_H_calls;
 	matrix x0;
 
 
 	ofstream myfile;
-	myfile.open("optymalizacja_4_t1.csv");
-	for(int j=0;j<3;j++){
+	myfile.open("lab_4_t1.csv");
+	/*for(int j=0;j<3;j++){
 		for (int i = 0; i < 100; i++) {
 			double x_[] = { (double)((rand() % 200) / 10.) - 10., (double)((rand() % 200) / 10.) - 10. };
 			x0 = matrix(2, x_);
@@ -346,8 +346,16 @@ void lab4()
 				<< newton.x(0) << ";" << newton.x(1) << ";" << newton.y(0) << ";" << newton_f_calls << ";" << newton_g_calls << ";" << newton_H_calls << endl;
 			
 		}
-	}
-	myfile.close();*/
+	}*/
+	double x_[] = { (double)((rand() % 200) / 10.) - 10., (double)((rand() % 200) / 10.) - 10. };
+	x0 = matrix(2, x_);
+	myfile<<"\t\tsd\n";
+	sd = SD(ff4T, gf4T, x0, s[2], epsilon, Nmax,NAN,NAN,&myfile);
+	myfile<<"\t\tgradienty\n";
+	cg = CG(ff4T, gf4T, x0, s[2], epsilon, Nmax,NAN,NAN,&myfile);
+	myfile<<"\t\tNewton\n";
+	newton = Newton(ff4T, gf4T, Hf4T, x0, s[2], epsilon, Nmax,NAN,NAN,&myfile);
+	myfile.close();
 
 	//Część rzeczywista
 	//Test porpawności funkcji rzeczywistych
@@ -367,7 +375,7 @@ void lab4()
 	cout << endl << dJ << endl;*/
 
 	//Rozwiązanie problemu rzeczywistego
-	matrix X(3, 100);
+	/*matrix X(3, 100);
 	ifstream daneX("XData.txt");
 	daneX >> X;
 
@@ -387,7 +395,7 @@ void lab4()
 	cout << rozw.x(0) << ";" << rozw.x(1) << ";" << rozw.x(2) << ";" << rozw.y(0) << ";" << solution::g_calls;
 	//Dolicz prawdopodobieństwo
 	double prawd = Ptheta(rozw.x, X, Y);
-	cout << ";" << prawd << endl;
+	cout << ";" << prawd << endl;*/
 }
 
 void lab5()
