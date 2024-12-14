@@ -229,12 +229,14 @@ matrix ff4T(matrix x,matrix ud1,matrix ud2) {
 	}
 	return y;
 }
+
 matrix gf4T(matrix x,matrix ud1,matrix ud2) {
 	matrix Xprim(2,1);
 	Xprim(0)=10.0*x(0)+8.0*x(1)-34.0;
 	Xprim(1)=8.0*x(0)+10.0*x(1)-38.0;
 	return Xprim;
 }
+
 matrix Hf4T(matrix x, matrix ud1, matrix ud2)
 {
 	matrix y(2, 2);
@@ -243,4 +245,53 @@ matrix Hf4T(matrix x, matrix ud1, matrix ud2)
 	y(1, 1) = 10.0;
 	y(1.0) = 8.0;
 	return y;
+}
+
+double h_thet(matrix thet, matrix x) {
+	double ht = (1.0 / (1.0 + exp(m2d(-trans(thet) * x))));
+	return ht;
+}
+
+matrix ff4R(matrix x, matrix ud1, matrix ud2) {
+	int* rozmiar = get_size(ud1); //rozmiar[1] = m
+	matrix J;
+	double ht = 1;
+	for (int i = 0; i < rozmiar[1]; i++) {
+		ht = h_thet(x, ud1[i]); //wyliczenie h_theta(x)
+		J = J + ud2(0, i) * log(ht) + (1 - ud2(0, i)) * log(1 - ht); //operacja sumy do wyliczenia J(theta), w ud2(0,i) znajduje się i-ty y
+	}
+	J = -J / rozmiar[1];
+	return J;
+}
+
+matrix gf4R(matrix x, matrix ud1, matrix ud2) {
+	int* rozmiar = get_size(ud1); //rozmiar[1] = m
+	matrix dJ;
+	double ht = 1;
+	for (int i = 0; i < rozmiar[1]; i++) {
+		ht = h_thet(x, ud1[i]); //wyliczenie h_theta(x)
+		dJ = dJ + (ht - ud2(0, i)) * ud1[i];  //operacja sumy do wyliczenia pochodnej cząstkowej J(theta)
+	}
+	dJ = dJ / rozmiar[1];
+	return dJ;
+}
+
+double Ptheta(matrix solwx, matrix ud1, matrix ud2) {
+	int zakw = 0;
+	int* rozmiar = get_size(ud1);
+	for (int i = 0; i < rozmiar[1]; i++) {
+		double pred = h_thet(solwx, ud1[i]);
+		int wynik = -1;
+		if (pred >= 0.5) {
+			wynik = 1;
+		}
+		else {
+			wynik = 0;
+		}
+
+		if (wynik == ud2[i]) {
+			zakw++;
+		}
+	}
+	return (double)zakw / rozmiar[1];
 }

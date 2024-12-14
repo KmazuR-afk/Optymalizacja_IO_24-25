@@ -30,7 +30,7 @@ int main()
 {
 	try
 	{
-		lab3();
+		lab4();
 	}
 	catch (string EX_INFO)
 	{
@@ -311,7 +311,7 @@ void lab3()
 
 void lab4()
 {
-	double epsilon = 0.001;
+	/*double epsilon = 0.001;
 	int Nmax = 10000;
 	double s[3] = { 0.05, 0.12, 0};
 	solution sd, cg, newton;
@@ -347,9 +347,47 @@ void lab4()
 			
 		}
 	}
-	myfile.close();
+	myfile.close();*/
+
+	//Część rzeczywista
+	//Test porpawności funkcji rzeczywistych
+	/*matrix X(3, 100);
+	ifstream daneX("XData.txt");
+	daneX >> X;
+
+	matrix Y(1, 100);
+	ifstream daneY("YData.txt");
+	daneY >> Y;
+
+	matrix theta = matrix(3, 1, 0.0);
+	matrix J = ff4R(theta, X, Y);
+	cout << J << endl;
+
+	matrix dJ = gf4R(theta, X, Y);
+	cout << endl << dJ << endl;*/
+
+	//Rozwiązanie problemu rzeczywistego
+	matrix X(3, 100);
+	ifstream daneX("XData.txt");
+	daneX >> X;
+
+	matrix Y(1, 100);
+	ifstream daneY("YData.txt");
+	daneY >> Y;
+
+	matrix theta = matrix(3, 1, 0.0);
+	double epsilon = 0.000001;
+	int Nmax = 1000000;
 
 	
+	double krok[] = {0.01, 0.001, 0.0001};
+	
+	solution rozw;
+	rozw = CG(ff4R, gf4R, theta, krok[2], epsilon, Nmax, X, Y);
+	cout << rozw.x(0) << ";" << rozw.x(1) << ";" << rozw.x(2) << ";" << rozw.y(0) << ";" << solution::g_calls;
+	//Dolicz prawdopodobieństwo
+	double prawd = Ptheta(rozw.x, X, Y);
+	cout << ";" << prawd << endl;
 }
 
 void lab5()
