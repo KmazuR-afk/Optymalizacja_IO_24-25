@@ -30,7 +30,7 @@ int main()
 {
 	try
 	{
-		lab4();
+		lab5();
 	}
 	catch (string EX_INFO)
 	{
@@ -400,6 +400,30 @@ void lab4()
 
 void lab5()
 {
+    double epsilon = 1e-3;      
+    int Nmax = 1000;              
+    matrix x0(2, 1);              
+    x0(0) = 0;                    
+    x0(1) = 0;
+
+    // Parametry funkcji celu
+    matrix ud1(2, 1);             
+    ud1(0) = 0.5;
+    ud1(1) = 10;               
+  
+    try {
+        solution result = Powell(ff5T, x0, epsilon, Nmax,ud1);
+
+        // Wyświetlenie wyników
+        std::cout << "Optymalizacja zakończona:\n";
+        std::cout << "x*: " << result.x << "\n";          // Punkt optymalny
+        std::cout << "f(x*): " << result.y << "\n";      // Wartość funkcji celu w x*
+        std::cout << "Liczba wywołań funkcji: " << solution::f_calls << "\n";
+        std::cout << "Flaga wyjścia: " << result.flag << "\n"; // 0: sukces, 1: przekroczono Nmax
+		solution::clear_calls();
+    } catch (std::string error) {
+        std::cerr << "Blad: " << error << "\n";
+    }
 
 }
 

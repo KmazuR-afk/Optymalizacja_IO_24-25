@@ -738,19 +738,58 @@ solution golden(matrix(*ff)(matrix, matrix, matrix), double a, double b, double 
 	}
 }
 
-solution Powell(matrix(*ff)(matrix, matrix, matrix), matrix x0, double epsilon, int Nmax, matrix ud1, matrix ud2)
-{
-	try
-	{
-		solution Xopt;
-		//Tu wpisz kod funkcji
+solution Powell(matrix(*ff)(matrix, matrix, matrix), matrix x0, double epsilon, int Nmax, matrix ud1, matrix ud2) {
+    try {
+        solution Xopt;
+        int n = get_len(x0);
+        matrix D = ident_mat(n);
+        matrix A(n, 2); // Macierz wyników dla funkcji celu i kierunków
+        solution P, h, X;
+        X.x = x0;
 
-		return Xopt;
-	}
-	catch (string ex_info)
-	{
-		throw ("solution Powell(...):\n" + ex_info);
-	}
+        double* ab;
+        while (true) {
+            P = X;
+
+            for (int i = 0; i < n; i++) {
+                // Aktualizacja macierzy A
+                A.set_col(P.x, 0);
+                A.set_col(D[i], 1);
+
+                // Wyznaczenie przedziału i minimalizacja
+                ab = expansion(ff, 0, 1, 1.2, Nmax, ud1, A);
+                h = golden(ff, ab[0], ab[1], epsilon, Nmax, ud1, A);
+                P.x = P.x + h.x * D[i];
+            }
+
+            // Kryterium zakończenia
+            if (norm(P.x - X.x) < epsilon || solution::f_calls > Nmax) {
+                Xopt = P;
+                Xopt.fit_fun(ff, ud1, ud2);
+                Xopt.flag = (solution::f_calls > Nmax) ? 1 : 0;
+                break;
+            }
+
+            // Aktualizacja kierunków
+            for (int i = 0; i < n - 1; i++) {
+                D.set_col(D[i + 1], i);
+            }
+            D.set_col(P.x - X.x, n - 1);
+
+            // Aktualizacja macierzy A
+            A.set_col(P.x, 0);
+            A.set_col(D[n - 1], 1);
+
+            // Wyznaczenie przedziału i minimalizacja w nowym kierunku
+            ab = expansion(ff, 0, 1, 1.1, Nmax, ud1, A);
+            h = golden(ff, ab[0], ab[1], epsilon, Nmax, ud1, A);
+            X.x = P.x + h.x * D[n - 1];
+        }
+
+        return Xopt;
+    } catch (string ex_info) {
+        throw ("solution Powell(...):\n" + ex_info);
+    }
 }
 
 solution EA(matrix(*ff)(matrix, matrix, matrix), int N, matrix lb, matrix ub, int mi, int lambda, matrix sigma0, double epsilon, int Nmax, matrix ud1, matrix ud2)

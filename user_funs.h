@@ -28,3 +28,5 @@ double h_thet(matrix, matrix);
 matrix ff4R(matrix, matrix, matrix);
 matrix gf4R(matrix, matrix, matrix);
 double Ptheta(matrix, matrix, matrix);
+
+matrix ff5T(matrix, matrix = NAN, matrix = NAN);
