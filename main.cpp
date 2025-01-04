@@ -403,13 +403,13 @@ void lab5()
     double epsilon = 1e-3;      
     int Nmax = 1000;              
     matrix x0(2, 1);              
-    x0(0) = 0;                    
-    x0(1) = 0;
+    x0(0) = 1.94324;             
+    x0(1) =-7.33292;   
 
     // Parametry funkcji celu
     matrix ud1(2, 1);             
-    ud1(0) = 0.5;
-    ud1(1) = 10;               
+    ud1(0) = 0;
+    ud1(1) = 1;               
   
     try {
         solution result = Powell(ff5T, x0, epsilon, Nmax,ud1);

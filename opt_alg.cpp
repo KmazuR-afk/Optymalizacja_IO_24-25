@@ -746,16 +746,14 @@ solution Powell(matrix(*ff)(matrix, matrix, matrix), matrix x0, double epsilon, 
         matrix A(n, 2); // Macierz wyników dla funkcji celu i kierunków
         solution P, h, X;
         X.x = x0;
-
         double* ab;
         while (true) {
             P = X;
-
+			
             for (int i = 0; i < n; i++) {
                 // Aktualizacja macierzy A
                 A.set_col(P.x, 0);
                 A.set_col(D[i], 1);
-
                 // Wyznaczenie przedziału i minimalizacja
                 ab = expansion(ff, 0, 1, 1.2, Nmax, ud1, A);
                 h = golden(ff, ab[0], ab[1], epsilon, Nmax, ud1, A);
