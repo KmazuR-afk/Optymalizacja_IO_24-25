@@ -30,3 +30,4 @@ matrix gf4R(matrix, matrix, matrix);
 double Ptheta(matrix, matrix, matrix);
 
 matrix ff5T(matrix, matrix = NAN, matrix = NAN);
+matrix ff5R(matrix, matrix = NAN, matrix = NAN);

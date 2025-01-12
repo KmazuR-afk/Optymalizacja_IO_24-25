@@ -310,4 +310,61 @@ matrix ff5T(matrix x, matrix ud1, matrix ud2) {
     return y;
 }
 
+matrix ff5R(matrix x, matrix ud1, matrix ud2) {
+	matrix y;
+
+	//Jeżeli ud2 puste
+	if (isnan(ud2(0, 0))) {
+		y = matrix(3, 1);
+
+		//inicjalizacja danych z instrukcji
+		double E = 207e9;
+		double P = 1e3;
+		double ro = 7800;
+
+		//x(0) - l; x(1) - d
+		//do y(0) obliczamy mase belki - pierwsze kryterium optymalizacji
+		//wzor m = ro * V // V = pole podstawy * wysokość = pi * r^2 * l = pi * (d/2)^2 * l
+		y(0) = ro * (3.14 * x(0) * (pow((x(1) / 2), 2)));
+
+		//do y(1) obliczam ugięcie belki - drugie kryterium optymalziacji
+		//wzór na ugięcie u z instrukcji
+		y(1) = ((64 * P * pow(x(0), 3)) / (3 * E * 3.14 * pow(x(1), 4)));
+
+		//do y(2) naprężenie
+		//wzór na naprężenie sigma z instrukcji
+		y(2) = ((32 * P * x(0)) / (3.14 * pow(x(1), 3)));
+	}
+	else {
+		matrix xtmp = ud2[0] + x * ud2[1];
+		matrix ytmp;
+
+		ytmp = ff5R(xtmp, ud1, NAN);
+
+		//metoda kryterium wazonego
+		y = ud1 * ytmp(0) + (1 - ud1) * ytmp(1);
+
+		double c = 1e8;
+		if (xtmp(0) < 0.2) {
+			y = y + c * pow(xtmp(0) - 0.2, 2);
+		}
+		if (xtmp(0) > 1.0) {
+			y = y + c * pow(xtmp(0) - 1.0, 2);
+		}
+		if (xtmp(1) < 0.01) {
+			y = y + c * pow(xtmp(1) - 0.01, 2);
+		}
+		if (xtmp(1) > 0.05) {
+			y = y + c * pow(xtmp(1) - 0.05, 2);
+		}
+		if (ytmp(1) > 0.005) {
+			y = y + c * pow(ytmp(1) - 0.005, 2);
+		}
+		if (ytmp(2) > 300e6) {
+			y = y + c * pow(ytmp(2) - 300e6, 2);
+		}
+	}
+	return y;
+}
+
 

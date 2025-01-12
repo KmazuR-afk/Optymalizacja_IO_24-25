@@ -400,31 +400,88 @@ void lab4()
 
 void lab5()
 {
-    double epsilon = 1e-3;      
-    int Nmax = 1000;              
-    matrix x0(2, 1);              
-    x0(0) = 1.94324;             
-    x0(1) =-7.33292;   
+	////Parametry dla funkcji
+ //   double epsilon = 1e-4;      
+ //   int Nmax = 10000;
 
-    // Parametry funkcji celu
-    matrix ud1(2, 1);             
-    ud1(0) = 0;
-    ud1(1) = 1;               
-  
-    try {
-        solution result = Powell(ff5T, x0, epsilon, Nmax,ud1);
+ //   matrix x0 = matrix(2, 1, 0.0);
+	//matrix x1 = matrix(2, 1, 0.0);
+	//matrix x2 = matrix(2, 1, 0.0);
 
-        // Wyświetlenie wyników
-        std::cout << "Optymalizacja zakończona:\n";
-        std::cout << "x*: " << result.x << "\n";          // Punkt optymalny
-        std::cout << "f(x*): " << result.y << "\n";      // Wartość funkcji celu w x*
-        std::cout << "Liczba wywołań funkcji: " << solution::f_calls << "\n";
-        std::cout << "Flaga wyjścia: " << result.flag << "\n"; // 0: sukces, 1: przekroczono Nmax
+ //   //Parametry funkcji celu
+	//double wart_a[3] = {1.0, 10.0, 100.0};
+
+ //   matrix ud_a1(2, 1);             
+ //   ud_a1(0) = 0; //w
+ //   ud_a1(1) = wart_a[0]; //a
+
+	//matrix ud_a2(2, 1);
+	//ud_a2(0) = 0; //w
+	//ud_a2(1) = wart_a[1]; //a  
+
+	//matrix ud_a3(2, 1);
+	//ud_a3(0) = 0; //w
+	//ud_a3(1) = wart_a[2]; //a  
+ // 
+	//ofstream file1("./wyniki_a1.csv");
+	//ofstream file2("./wyniki_a2.csv");
+	//ofstream file3("./wyniki_a3.csv");
+
+	//for (double w = 0; w < 1.01; w = w + 0.01) {
+	//	//Wartości wspólne
+	//	ud_a1(0) = w;
+	//	ud_a2(0) = w;
+	//	ud_a3(0) = w;
+	//	cout << w << endl;
+
+	//	x0 = rand_mat(2,1);
+	//	x0(0) = 20 * x0(0) - 10;
+	//	x0(1) = 20 * x0(1) - 10;
+	//	x1 = x0;
+	//	x2 = x0;
+
+	//	solution rozw = Powell(ff5T, x0, epsilon, Nmax, ud_a1);
+	//	file1 << x0(0) << ";" << x0(1) << ";" << rozw.x(0) << ";" << rozw.x(1) << ";" << rozw.y(0) << ";" << rozw.y(1) << ";" << solution::f_calls << endl;
+	//	solution::clear_calls();
+
+	//	solution rozw1 = Powell(ff5T, x1, epsilon, Nmax, ud_a2);
+	//	file2 << x1(0) << ";" << x1(1) << ";" << rozw1.x(0) << ";" << rozw1.x(1) << ";" << rozw1.y(0) << ";" << rozw1.y(1) << ";" << solution::f_calls << endl;
+	//	solution::clear_calls();
+
+	//	solution rozw2 = Powell(ff5T, x2, epsilon, Nmax, ud_a3);
+	//	file3 << x2(0) << ";" << x2(1) << ";" << rozw2.x(0) << ";" << rozw2.x(1) << ";" << rozw2.y(0) << ";" << rozw2.y(1) << ";" << solution::f_calls << endl;
+	//	solution::clear_calls();
+	//}
+
+	//file1.close();
+	//file2.close();
+	//file3.close();
+
+	
+	//Parametry dla funkcji
+	double epsilon = 1e-4;
+	int Nmax = 10000;
+	ofstream file("./wyniki_r.csv");
+
+	matrix ud_a(1, 1);
+	ud_a(0) = 0; //w
+	//ud_a(1) = 1.0; //a
+
+	matrix x0 = matrix(2, 1, 0.0);
+
+	for (double w = 0; w < 1.01; w = w + 0.01) {
+		ud_a(0) = w;
+
+		x0 = rand_mat(2, 1);
+		x0(0) = 0.8 * x0(0) + 0.2;
+		x0(1) = 0.04 * x0(1) + 0.01;
+
+		solution rozw = Powell(ff5R, x0, epsilon, Nmax, ud_a);
+		file << x0(0) << ";" << x0(1) << ";" << rozw.x(0) << ";" << rozw.x(1) << ";" << rozw.y(0) << ";" << rozw.y(1) << ";" << solution::f_calls << endl;
 		solution::clear_calls();
-    } catch (std::string error) {
-        std::cerr << "Blad: " << error << "\n";
-    }
+	}
 
+	file.close();
 }
 
 void lab6()
