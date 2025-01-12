@@ -363,11 +363,11 @@ matrix ff5R(matrix x, matrix ud1, matrix ud2) {
 		if (xtmp(1) > 0.05) {
 			y = y + c * pow(xtmp(1) - 0.05, 2);
 		}
-		//sprawdz czy ugięcie nie przekracza maksimum
+		//sprawdz czy ugięcie u nie przekracza maksimum
 		if (ytmp(1) > 0.005) {
 			y = y + c * pow(ytmp(1) - 0.005, 2);
 		}
-		//sprawdz czy napręzenie nie przekracza maksimum
+		//sprawdz czy napręzenie sigma nie przekracza maksimum
 		if (ytmp(2) > 300e6) {
 			y = y + c * pow(ytmp(2) - 300e6, 2);
 		}
