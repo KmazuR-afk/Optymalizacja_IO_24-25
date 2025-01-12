@@ -317,7 +317,7 @@ matrix ff5R(matrix x, matrix ud1, matrix ud2) {
 	if (isnan(ud2(0, 0))) {
 		y = matrix(3, 1);
 
-		//inicjalizacja danych z instrukcji
+		//inicjalizacja danych z instrukcji z zamianą na SI
 		double E = 207e9;
 		double P = 1e3;
 		double ro = 7800;
@@ -336,6 +336,7 @@ matrix ff5R(matrix x, matrix ud1, matrix ud2) {
 		y(2) = ((32 * P * x(0)) / (3.14 * pow(x(1), 3)));
 	}
 	else {
+		//agregacja pierwszego wywołania
 		matrix xtmp = ud2[0] + x * ud2[1];
 		matrix ytmp;
 
@@ -344,22 +345,29 @@ matrix ff5R(matrix x, matrix ud1, matrix ud2) {
 		//metoda kryterium wazonego
 		y = ud1 * ytmp(0) + (1 - ud1) * ytmp(1);
 
+		//element kary
 		double c = 1e8;
+		//sprawdz czy l nie jest za małe
 		if (xtmp(0) < 0.2) {
 			y = y + c * pow(xtmp(0) - 0.2, 2);
 		}
+		//sprawdz czy l nie jest za duze
 		if (xtmp(0) > 1.0) {
 			y = y + c * pow(xtmp(0) - 1.0, 2);
 		}
+		//sprawdz czy d nie jest za male
 		if (xtmp(1) < 0.01) {
 			y = y + c * pow(xtmp(1) - 0.01, 2);
 		}
+		//sprawdz czy d nie jest za duze
 		if (xtmp(1) > 0.05) {
 			y = y + c * pow(xtmp(1) - 0.05, 2);
 		}
+		//sprawdz czy ugięcie nie przekracza maksimum
 		if (ytmp(1) > 0.005) {
 			y = y + c * pow(ytmp(1) - 0.005, 2);
 		}
+		//sprawdz czy napręzenie nie przekracza maksimum
 		if (ytmp(2) > 300e6) {
 			y = y + c * pow(ytmp(2) - 300e6, 2);
 		}

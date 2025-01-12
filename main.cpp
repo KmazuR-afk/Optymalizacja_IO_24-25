@@ -459,23 +459,28 @@ void lab5()
 
 	
 	//Parametry dla funkcji
+	//dobrane przez nas
 	double epsilon = 1e-4;
 	int Nmax = 10000;
 	ofstream file("./wyniki_r.csv");
 
 	matrix ud_a(1, 1);
 	ud_a(0) = 0; //w
-	//ud_a(1) = 1.0; //a
 
 	matrix x0 = matrix(2, 1, 0.0);
 
 	for (double w = 0; w < 1.01; w = w + 0.01) {
+		//nadawaj kolejne wartości w co 0.01
 		ud_a(0) = w;
 
+		//losowanie zmiennych l oraz d
 		x0 = rand_mat(2, 1);
+		//l w przedziale od 0.2 do 1.0 (w metrach)
 		x0(0) = 0.8 * x0(0) + 0.2;
+		//d w przedziale od 0.01 do 0.05 (w metrach)
 		x0(1) = 0.04 * x0(1) + 0.01;
 
+		//wywołanie oraz zapis do pliku
 		solution rozw = Powell(ff5R, x0, epsilon, Nmax, ud_a);
 		file << x0(0) << ";" << x0(1) << ";" << rozw.x(0) << ";" << rozw.x(1) << ";" << rozw.y(0) << ";" << rozw.y(1) << ";" << solution::f_calls << endl;
 		solution::clear_calls();
