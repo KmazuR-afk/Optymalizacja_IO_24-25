@@ -325,7 +325,7 @@ matrix ff5R(matrix x, matrix ud1, matrix ud2) {
 		//x(0) - l; x(1) - d
 		//do y(0) obliczamy mase belki - pierwsze kryterium optymalizacji
 		//wzor m = ro * V // V = pole podstawy * wysokość = pi * r^2 * l = pi * (d/2)^2 * l
-		y(0) = ro * (3.14 * x(0) * (pow((x(1) / 2), 2)));
+		y(0) = ro * (3.14 * x(0) * (pow((x(1)), 2)))/4;
 
 		//do y(1) obliczam ugięcie belki - drugie kryterium optymalziacji
 		//wzór na ugięcie u z instrukcji
@@ -337,16 +337,20 @@ matrix ff5R(matrix x, matrix ud1, matrix ud2) {
 	}
 	else {
 		//agregacja pierwszego wywołania
-		matrix xtmp = ud2[0] + x * ud2[1];
-		matrix ytmp;
+		matrix ytmp, xtmp = ud2[0] + x * ud2[1];
+		//cout << xtmp << endl;
+		//matrix ytmp;
 
 		ytmp = ff5R(xtmp, ud1, NAN);
 
-		//metoda kryterium wazonego
-		y = ud1 * ytmp(0) + (1 - ud1) * ytmp(1);
+		//metoda kryterium wazonego bez normalizacji
+		//y = ud1 * (ytmp(0)) + (1 - ud1) * (ytmp(1));
+		// 
+		//metoda kryterium wazonego + normalizacja
+		y = ud1 * (ytmp(0)-0.2)/(4.0-0.2) + (1 - ud1) * (ytmp(1)- 0.00005)/(0.005-0.00005);
 
 		//element kary
-		double c = 1e8;
+		double c = 1e9;
 		//sprawdz czy l nie jest za małe
 		if (xtmp(0) < 0.2) {
 			y = y + c * pow(xtmp(0) - 0.2, 2);

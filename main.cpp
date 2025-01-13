@@ -465,14 +465,15 @@ void lab5()
 	ofstream file("./wyniki_r.csv");
 
 	matrix ud_a(1, 1);
-	ud_a(0) = 0; //w
+	//ud_a(0) = 0; //w
 
-	matrix x0 = matrix(2, 1, 0.0);
+	
 
 	for (double w = 0; w < 1.01; w = w + 0.01) {
 		//nadawaj kolejne wartości w co 0.01
 		ud_a(0) = w;
 
+		matrix x0 = matrix(2, 1, 0.0);
 		//losowanie zmiennych l oraz d
 		x0 = rand_mat(2, 1);
 		//l w przedziale od 0.2 do 1.0 (w metrach)
