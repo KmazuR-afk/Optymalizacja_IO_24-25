@@ -512,7 +512,7 @@ void lab6()
 	myfile.open("optymalizacja_5_t1.csv");
 	for (int a = 0; a < 5; a++) {
 		for (int i = 0; i < 100; i++) {
-			EAf = EA(ff5T, N, lb, ub, mi, lambda, sigma[a], epsilon, Nmax);
+			EAf = EA(ff6T, N, lb, ub, mi, lambda, sigma[a], epsilon, Nmax);
 			saving(0) = EAf.x(0);
 			saving(1) = EAf.x(1);
 			saving(2) = EAf.y(0);
