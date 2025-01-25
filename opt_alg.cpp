@@ -795,8 +795,9 @@ solution EA(matrix(*ff)(matrix, matrix, matrix), int N, matrix lb, matrix ub, in
 	try
 	{
 		solution Xopt;
-		//Tu wpisz kod funkcji
-
+		solution::clear_calls();
+		solution *P=new solution[mi*lambda],*P_Mutate=new solution[mi];
+		matrix RMF(mi,1),temp(N,2);
 		return Xopt;
 	}
 	catch (string ex_info)
