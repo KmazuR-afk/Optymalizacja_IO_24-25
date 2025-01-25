@@ -378,5 +378,7 @@ matrix ff5R(matrix x, matrix ud1, matrix ud2) {
 	}
 	return y;
 }
-
+matrix ff6T(matrix x, matrix ud1, matrix ud2) {
+	return (pow(x(0), 2) + pow(x(1), 2) - cos(2.5 * 3.14 * x(0)) - cos(2.5 * 3.14 * x(1)) + 2);
+}
 

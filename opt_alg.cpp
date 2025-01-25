@@ -794,11 +794,92 @@ solution EA(matrix(*ff)(matrix, matrix, matrix), int N, matrix lb, matrix ub, in
 {
 	try
 	{
-		solution Xopt;
 		solution::clear_calls();
-		solution *P=new solution[mi*lambda],*P_Mutate=new solution[mi];
-		matrix RMF(mi,1),temp(N,2);
-		return Xopt;
+		solution *P=new solution[mi*lambda],*T=new solution[lambda];
+		solution A,B;
+		matrix RMF(mi,1);
+		double r,s,s_rmf,a,b;
+		double alf = 1.0 / sqrt(2 * N), beta = 1.0 / sqrt(2 * sqrt(N));
+		int j_min=0;
+		double q[mi];
+		for (int i=0;i<mi;++i){
+			for (int j = 0; j < N; ++j) {
+				P[i].x(j, 0) = (ub(j) - lb(j)) * m2d(rand_mat()) + lb(j);
+				P[i].x(j, 1) = sigma0(j);
+			}
+			P[i].fit_fun(ff, ud1, ud2);
+			if(P[i].y<epsilon)
+			{
+				P[i].flag=1;
+				return P[i];
+			}
+		}
+		while(true){
+			s_rmf=0;
+			for(int i=0;i<mi;i++)//koło ruletki
+			{
+				RMF[i]=1/P[i].y;
+				s_rmf+=RMF(i);
+			}
+			q[0] = 0;
+			for (int j = 1; j < mi; j++) {
+				q[j] = q[j-1] + RMF(j) / s_rmf;
+			}
+			a=m2d(rand_mat());
+			for (int i=0;i<lambda;i++){//selekcja rodziców
+				 // Wybór pierwszego rodzica
+				r = s_rmf * m2d(rand_mat());
+				for (int j = 0; j < mi; j++) {
+					if (r <= q[j]) {
+						A = P[j];
+						break;
+					}
+				}
+				// Wybór drugiego rodzica (zapewnienie różnorodności)
+				do {
+					r = s_rmf * m2d(rand_mat());
+					for (int j = 0; j < mi; j++) {
+						if (r <= q[j]) {
+							B = P[j];
+							continue;
+						}
+					}
+				} while (B.x==A.x);  // Zapewniamy, że rodzice nie są identyczni
+				r = m2d(rand_mat());
+				T[i].x = r * A.x + (1 - r) * B.x;//Krzyżowanie
+				T[i].fit_fun(ff,ud1,ud2);
+				//mutacja
+				for (int j = 0; j < N; ++j) {
+					b=m2d(rand_mat());
+					T[i].x(j, 1) *= exp(alf *a + beta * b);
+					b=m2d(rand_mat());
+					T[i].x(j, 0) += T[i].x(j, 1) * b;
+				}
+			}
+			//szukanie najlepszych członków populacji
+			for (int i = 0; i < lambda; ++i){
+				T[i].fit_fun(ff, ud1, ud2);
+				if (T[i].y < epsilon) {
+					T[i].flag = 1;
+					return T[i];
+				}
+			}
+			for (int i = 0; i < mi; ++i)
+			{
+				j_min = 0;
+				for (int j = 1; j < mi + lambda; ++j)
+					if (T[j_min].y > T[j].y)
+						j_min = j;
+				P[i] = T[j_min];
+				T[j_min].y = 1e10;  // Usunięcie osobnika z dalszego rozważania
+			}
+			for (int i = 0; i < mi; ++i)
+					P[i] = T[i];
+			if (solution::f_calls > Nmax)
+				break;
+		}
+		P[0].flag = 0;
+		return P[0];
 	}
 	catch (string ex_info)
 	{

@@ -30,7 +30,7 @@ int main()
 {
 	try
 	{
-		lab5();
+		lab6();
 	}
 	catch (string EX_INFO)
 	{
@@ -492,6 +492,40 @@ void lab5()
 
 void lab6()
 {
+	double sigma[5] = { 0.01, 0.1, 1, 10, 100 };
+	solution EAf;
+	int N = 2; 
+	matrix lb(N, 1), ub(N,1);
+	lb = matrix(2, 1, -5);
+	ub = matrix(2, 1, 5);
 
+	int mi = 20;
+	int lambda = 40;
+	double epsilon = 1e-5;
+	int Nmax = 10000;
+
+	// matrix sigma(2, 1, 1);
+
+
+	matrix saving(4, 1, 0.);
+	ofstream myfile;
+	myfile.open("optymalizacja_5_t1.csv");
+	for (int a = 0; a < 5; a++) {
+		for (int i = 0; i < 100; i++) {
+			EAf = EA(ff5T, N, lb, ub, mi, lambda, sigma[a], epsilon, Nmax);
+			saving(0) = EAf.x(0);
+			saving(1) = EAf.x(1);
+			saving(2) = EAf.y(0);
+			saving(3) = solution::f_calls;
+			string min;
+			if (solution::f_calls > 10000)
+				min = "NIE";
+			else
+				min = "TAK";
+			myfile << trans(saving) << ";" << min << "\n";
+			cout << EAf << endl;
+		}
+	}
+	myfile.close();
 }
 
