@@ -396,11 +396,11 @@ matrix ff6R(matrix x, matrix ud1, matrix ud2) {
 }
 
 matrix df6R(double t, matrix Y, matrix ud1, matrix ud2) {
-	double m1 = 5; //masa cięąrka m1 (kg)
-	double m2 = 5; //masa ciężarka m2 (kg)
-	double k1 = 1; //stała sprężystości k1 (N/m)
-	double k2 = 1; //stała sprężystości k2 (N/m)
-	double F = 1; //siła zewnętrzna (N)
+	double m1 = 5.0; //masa cięąrka m1 (kg)
+	double m2 = 5.0; //masa ciężarka m2 (kg)
+	double k1 = 1.0; //stała sprężystości k1 (N/m)
+	double k2 = 1.0; //stała sprężystości k2 (N/m)
+	double F = 1.0; //siła zewnętrzna (N)
 	double b1 = ud2(0); //tłumienie 1
 	double b2 = ud2(0); //tłumienie 2
 

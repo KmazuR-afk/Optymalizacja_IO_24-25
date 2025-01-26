@@ -518,21 +518,31 @@ void lab6()
 	//Problem rzeczywisty
 	matrix dane_txt(1001, 2);
 	ifstream odczyt("polozenia.txt");
-	odczyt >> dane_txt;
+	odczyt >> dane_txt; //import danych z pliku txt do macierzy
+	odczyt.close();
 
-	cout << dane_txt;
 	matrix lb = matrix(2, 1, 0.1); //dolny przedział
 	matrix ub = matrix(2, 1, 3); //górny przedział
 
-	int N = 2;
-	int mi = 18;
-	int lambda = 40;
-	double epsilon = 1e-4;
-	int Nmax = 100000;
+	int N = 2; //liczba zmiennych decyzyjnych
+	int mi = 18; //liczba populacji bazowej
+	int lambda = 40; //liczba populacji tymczasowej
+	double epsilon = 1e-3; //dokładność optymalizacji
+	int Nmax = 100000; //maksymalna liczba wywołań
 	solution EA_sol;
-	EA_sol = EA(ff6R, N, lb, ub, mi, lambda, matrix(2, 1, 1), epsilon, Nmax, 1001, dane_txt);
+	EA_sol = EA(ff6R, N, lb, ub, mi, lambda, matrix(2, 1, 1), epsilon, Nmax, 1001, dane_txt); //parametry powyżej + macierz początkowej wartości mutacji
+
+	cout << "Znalezione b1: " << EA_sol.x(0) << ", znalezione b2: " << EA_sol.x(1) << ", wartość funkcji celu y*: " << EA_sol.y << ", liczba wywołań: " << solution::f_calls << endl;
+	solution::clear_calls;
 
 	matrix Y0(4, 1);
-	matrix* Y_rozw = solve_ode(df6R, 0, 0.1, 100, NAN, EA_sol.x[0]);
+	matrix* Y_rozw = solve_ode(df6R, 0, 0.1, 100, Y0, 1001, EA_sol.x[0]);
+
+	ofstream file;
+	file.open("problem_rzeczywisty_5.csv");
+	for (int i = 0; i < 1001; i++) {
+		file << Y_rozw[1](i, 0) << ";" << Y_rozw[1](i, 2) << endl;
+	}
+	file.close();
 }
 
