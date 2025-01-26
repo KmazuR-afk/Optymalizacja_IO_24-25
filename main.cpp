@@ -492,27 +492,34 @@ void lab5()
 
 void lab6()
 {
-	//Problem testowy
-	double sigma[5] = { 0.01, 0.1, 1, 10, 100 }; //zadane z instrukcji współczynniki mutacji sigma
-	int N = 2; //liczba zmiennych decyzyjnych
-	matrix lb(N, 1), ub(N, 1);
-	lb = matrix(2, 1, -5); //dolny przedział poszukwiań
-	ub = matrix(2, 1, 5); //górny przedział poszukiwań
+	////Problem testowy
+	//double sigma[5] = { 0.01, 0.1, 1, 10, 100 }; //zadane z instrukcji współczynniki mutacji sigma
+	//int N = 2; //liczba zmiennych decyzyjnych
+	//matrix lb(N, 1), ub(N, 1);
+	//lb = matrix(2, 1, -5); //dolny przedział poszukwiań
+	//ub = matrix(2, 1, 5); //górny przedział poszukiwań
 
-	//Parametry dla algortymu EA
-	int mi = 18;
-	int lambda = 40;
-	double epsilon = 1e-4;
-	int Nmax = 100000;
+	////Parametry dla algortymu EA
+	//int mi = 18;
+	//int lambda = 40;
+	//double epsilon = 1e-4;
+	//int Nmax = 100000;
 
-	solution EA_sol;
-	ofstream file;
-	file.open("problem_testowy_5.csv");
-	for (int i = 0; i < 100; i++) {
-		EA_sol = EA(ff6T, N, lb, ub, mi, lambda, sigma[4], epsilon, Nmax);
-		file << EA_sol.x(0) << ";" << EA_sol.x(1) << ";" << EA_sol.y(0) << ";" << solution::f_calls << endl;
-		solution::clear_calls();
-	}
-	file.close();
+	//solution EA_sol;
+	//ofstream file;
+	//file.open("problem_testowy_5.csv");
+	//for (int i = 0; i < 100; i++) {
+	//	EA_sol = EA(ff6T, N, lb, ub, mi, lambda, sigma[4], epsilon, Nmax);
+	//	file << EA_sol.x(0) << ";" << EA_sol.x(1) << ";" << EA_sol.y(0) << ";" << solution::f_calls << endl;
+	//	solution::clear_calls();
+	//}
+	//file.close();
+
+	//Problem rzeczywisty
+	matrix dane_txt(1001, 2);
+	ifstream odczyt("polozenia.txt");
+	odczyt >> dane_txt;
+
+	cout << dane_txt;
 }
 

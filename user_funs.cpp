@@ -382,10 +382,10 @@ matrix ff6T(matrix x, matrix ud1, matrix ud2) {
 	return (pow(x(0), 2) + pow(x(1), 2) - cos(2.5 * 3.14 * x(0)) - cos(2.5 * 3.14 * x(1)) + 2);
 }
 
-matrix ff5R(matrix x, matrix ud1, matrix ud2) {
+matrix ff6R(matrix x, matrix ud1, matrix ud2) {
 	matrix y;
 	matrix YR(4, 1);
-	matrix* Y_sol = solve_ode(df5, 0, 0.1, 100, YR, ud1, x[0]);
+	matrix* Y_sol = solve_ode(df6, 0, 0.1, 100, YR, ud1, x[0]);
 	for (int i = 0; i < ud1(0); i++) {
 		y = y + abs(ud2(i, 0) - Y_sol[1](i, 0)) + abs(ud2(i, 1)) - Y_sol[1](i, 2);
 	}
@@ -393,7 +393,7 @@ matrix ff5R(matrix x, matrix ud1, matrix ud2) {
 	return y;
 }
 
-matrix df5(double t, matrix Y, matrix ud1, matrix ud2) {
+matrix df6(double t, matrix Y, matrix ud1, matrix ud2) {
 	double m1 = 5;
 	double m2 = 5;
 	double k1 = 1;
