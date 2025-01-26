@@ -506,15 +506,12 @@ void lab6()
 	int Nmax = 100000;
 
 	solution EA_sol;
-	//matrix saving(4, 1, 0.);
 	ofstream file;
 	file.open("problem_testowy_5.csv");
-	for (int a = 0; a < 1; a++) {
-		for (int i = 0; i < 100; i++) {
-			EA_sol = EA(ff6T, N, lb, ub, mi, lambda, sigma[a], epsilon, Nmax);
-			file << EA_sol.x(0) << ";" << EA_sol.x(1) << ";" << EA_sol.y(0) << ";" << solution::f_calls << endl;
-			solution::clear_calls();
-		}
+	for (int i = 0; i < 100; i++) {
+		EA_sol = EA(ff6T, N, lb, ub, mi, lambda, sigma[1], epsilon, Nmax);
+		file << EA_sol.x(0) << ";" << EA_sol.x(1) << ";" << EA_sol.y(0) << ";" << solution::f_calls << endl;
+		solution::clear_calls();
 	}
 	file.close();
 }
