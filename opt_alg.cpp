@@ -790,94 +790,93 @@ solution Powell(matrix(*ff)(matrix, matrix, matrix), matrix x0, double epsilon, 
     }
 }
 
+
 solution EA(matrix(*ff)(matrix, matrix, matrix), int N, matrix lb, matrix ub, int mi, int lambda, matrix sigma0, double epsilon, int Nmax, matrix ud1, matrix ud2)
 {
-	try
-	{
-		solution::clear_calls();
-		solution *P=new solution[mi*lambda],*T=new solution[lambda];
-		solution A,B;
-		matrix RMF(mi,1);
-		double r,s,s_rmf,a,b;
-		double alf = 1.0 / sqrt(2 * N), beta = 1.0 / sqrt(2 * sqrt(N));
-		int j_min=0;
-		double q[mi];
-		for (int i=0;i<mi;++i){
-			for (int j = 0; j < N; ++j) {
-				P[i].x(j, 0) = (ub(j) - lb(j)) * m2d(rand_mat()) + lb(j);
-				P[i].x(j, 1) = sigma0(j);
-			}
+	try {
+		//solution::clear_calls();
+		solution* Pm = new solution[mi]; //Populacja potomna
+		solution* P = new solution[mi + lambda]; //Łączona populacja T
+		matrix fi(mi, 1), temp(N, 2); //inicjacja macierzy dla fi oraz macierzy pomocniczej
+		double r, check_q, qm; //inicjacja r, wartości dla sprawdzenia q oraz sumatora qm
+		double alfa = 1.0 / sqrt(N), beta = 1.0 / sqrt(sqrt(2 * N)); //inicjacja wartości alfa oraz beta
+		int j_min;
+		for (int i = 0; i < mi; ++i) {
+			P[i].x = matrix(N, 2);
+			P[i].x(0, 0) = (lb(1) - lb(0)) * m2d(rand_mat()) + lb(0);
+			P[i].x(0, 1) = sigma0(0);
+			P[i].x(1, 0) = (ub(1) - ub(0)) * m2d(rand_mat()) + ub(0);
+			P[i].x(1, 1) = sigma0(0);
 			P[i].fit_fun(ff, ud1, ud2);
-			if(P[i].y<epsilon)
-			{
-				P[i].flag=1;
+			if (P[i].y < epsilon) {
+				P[i].flag = 1;
 				return P[i];
 			}
 		}
-		while(true){
-			s_rmf=0;
-			for(int i=0;i<mi;i++)//koło ruletki
-			{
-				RMF[i]=1/P[i].y;
-				s_rmf+=RMF(i);
+		while (true) {
+			//Tworzenie koła ruletki
+			qm = 0;
+			for (int i = 0; i < mi; ++i) {
+				fi(i) = 1 / P[i].y(0);
+				qm += fi(i);
 			}
-			q[0] = 0;
-			for (int j = 1; j < mi; j++) {
-				q[j] = q[j-1] + RMF(j) / s_rmf;
-			}
-			a=m2d(rand_mat());
-			for (int i=0;i<lambda;i++){//selekcja rodziców
-				 // Wybór pierwszego rodzica
-				r = s_rmf * m2d(rand_mat());
-				for (int j = 0; j < mi; j++) {
-					if (r <= q[j]) {
-						A = P[j];
+
+			//Generowanie osobników rodzicielskich
+			for (int i = 0; i < lambda; ++i) {
+				r = qm * m2d(rand_mat());
+				check_q = 0;
+				for (int j = 0; j < mi; ++j) {
+					check_q += fi(j);
+					if (r <= check_q) {
+						P[mi + i] = P[j];
 						break;
 					}
 				}
-				// Wybór drugiego rodzica (zapewnienie różnorodności)
-				do {
-					r = s_rmf * m2d(rand_mat());
-					for (int j = 0; j < mi; j++) {
-						if (r <= q[j]) {
-							B = P[j];
-							continue;
-						}
-					}
-				} while (B.x==A.x);  // Zapewniamy, że rodzice nie są identyczni
-				r = m2d(rand_mat());
-				T[i].x = r * A.x + (1 - r) * B.x;//Krzyżowanie
-				T[i].fit_fun(ff,ud1,ud2);
-				//mutacja
+			}
+
+			//Mutacja
+			for (int i = 0; i < lambda; ++i) {
+				double a = m2d(randn_mat());
 				for (int j = 0; j < N; ++j) {
-					b=m2d(rand_mat());
-					T[i].x(j, 1) *= exp(alf *a + beta * b);
-					b=m2d(rand_mat());
-					T[i].x(j, 0) += T[i].x(j, 1) * b;
+					P[mi + i].x(j, 1) *= exp(alfa * a + beta * m2d(randn_mat())); //b1
+					P[mi + i].x(j, 0) += P[mi + i].x(j, 1) * m2d(randn_mat()); //b2
 				}
 			}
-			//szukanie najlepszych członków populacji
-			for (int i = 0; i < lambda; ++i){
-				T[i].fit_fun(ff, ud1, ud2);
-				if (T[i].y < epsilon) {
-					T[i].flag = 1;
-					return T[i];
+
+			//Krzyżowanie
+			for (int i = 0; i < lambda; i += 2) {
+				r = m2d(rand_mat());
+				temp = P[mi + i].x;
+				P[mi + i].x = r * P[mi + i].x + (1 - r) * P[mi + i + 1].x;
+				P[mi + i + 1].x = r * P[mi + i + 1].x + (1 - r) * temp;
+			}
+
+			//Sprawdzenie dla każdego rozwiązania w tablicy ewentualnego istnienia rozwiązania
+			for (int i = 0; i < lambda; ++i) {
+				P[mi + i].fit_fun(ff, ud1, ud2);
+				if (P[mi + i].y < epsilon) {
+
+					P[mi + i].flag = 1;
+					return P[mi + i];
 				}
 			}
-			for (int i = 0; i < mi; ++i)
-			{
+
+			//Selekcja najlepszych osobników, kopia najlepszego osobnika do tablicy Pm i jego maskowanie
+			for (int i = 0; i < mi; ++i) {
 				j_min = 0;
 				for (int j = 1; j < mi + lambda; ++j)
-					if (T[j_min].y > T[j].y)
+					if (P[j_min].y > P[j].y)
 						j_min = j;
-				P[i] = T[j_min];
-				T[j_min].y = 1e10;  // Usunięcie osobnika z dalszego rozważania
+				Pm[i] = P[j_min];
+				P[j_min].y = 1e10;
 			}
+			//Aktualizacja populacji rodzicielskiej, kopia najlepszych osobników
 			for (int i = 0; i < mi; ++i)
-					P[i] = T[i];
+				P[i] = Pm[i];
 			if (solution::f_calls > Nmax)
 				break;
 		}
+		//Zwrot rozwiązania z ostatniej iteracji w przypadku przekroczenia ilośi
 		P[0].flag = 0;
 		return P[0];
 	}
@@ -886,3 +885,107 @@ solution EA(matrix(*ff)(matrix, matrix, matrix), int N, matrix lb, matrix ub, in
 		throw ("solution EA(...):\n" + ex_info);
 	}
 }
+
+/*
+solution EA(matrix(*ff)(matrix, matrix, matrix), int N, matrix lb, matrix ub, int mi, int lambda, matrix sigma0, double epsilon, int Nmax, matrix ud1, matrix ud2)
+{
+	try
+	{
+
+		solution* Pm = new solution[mi]; //Populacja potomna
+		solution* P = new solution[mi + lambda]; //Łączona populacja T
+		matrix fi(mi, 1), temp(N, 2); //inicjacja macierzy dla fi oraz macierzy pomocniczej
+		double r, check_q, qm; //inicjacja r, wartości dla sprawdzenia q oraz sumatora qm
+		double alfa = 1.0 / sqrt(N), beta = 1.0 / sqrt(sqrt(2 * N)); //inicjacja wartości alfa oraz beta
+		int j_min;
+
+		//Generacja populacji początkowej
+		for (int i = 0; i < mi; ++i)
+		{
+			P[i].x = matrix(N, 2);
+			P[i].x(0, 0) = (lb(1) - lb(0)) * m2d(rand_mat()) + lb(0);
+			P[i].x(0, 1) = sigma0(0);
+			P[i].x(1, 0) = (ub(1) - ub(0)) * m2d(rand_mat()) + ub(0);
+			P[i].x(1, 1) = sigma0(0);
+			P[i].fit_fun(ff, ud1, ud2);
+			if (P[i].y < epsilon) {
+				P[i].flag = 1;
+				return P[i];
+			}
+		}
+
+
+		while (true) {
+			//Tworzenie koła ruletki
+			qm = 0;
+			for (int i = 0; i < mi; ++i) {
+				fi(i) = 1 / P[i].y(0);
+				qm += fi(i);
+			}
+
+			//Generowanie osobników rodzicielskich
+			for (int i = 0; i < lambda; ++i) {
+				r = qm * m2d(rand_mat());
+				check_q = 0;
+				for (int j = 0; j < mi; ++j) {
+					check_q += fi(j);
+					if (r <= check_q) {
+						P[mi + i] = P[j];
+						break;
+					}
+				}
+			}
+
+			//Mutacja
+			double a = m2d(randn_mat());
+			for (int i = 0; i < lambda; ++i) {
+				double b1 = m2d(randn_mat());
+				double b2 = m2d(randn_mat());
+				for (int j = 0; j < N; ++j) {
+					P[mi + i].x(j, 1) *= exp(alfa * a + beta * b1);
+					P[mi + i].x(j, 0) += P[mi + i].x(j, 1) * b2;
+				}
+			}
+
+			//Krzyżowanie
+			for (int i = 0; i < lambda; i += 2) {
+				r = m2d(rand_mat());
+				temp = P[mi + i].x;
+				P[mi + i].x = r * P[mi + i].x + (1 - r) * P[mi + i + 1].x;
+				P[mi + i + 1].x = r * P[mi + i + 1].x + (1 - r) * temp;
+			}
+
+			//Sprawdzenie dla każdego rozwiązania w tablicy ewentualnego istnienia rozwiązania
+			for (int i = 0; i < lambda; ++i) {
+				P[mi + i].fit_fun(ff, ud1, ud2);
+				if (P[mi + i].y < epsilon) {
+
+					P[mi + i].flag = 1;
+					return P[mi + i];
+				}
+			}
+
+			//Selekcja najlepszych osobników, kopia najlepszego osobnika do tablicy Pm i jego maskowanie
+			for (int i = 0; i < mi; ++i) {
+				j_min = 0;
+				for (int j = 1; j < mi + lambda; ++j)
+					if (P[j_min].y > P[j].y)
+						j_min = j;
+				Pm[i] = P[j_min];
+				P[j_min].y = 1e10;
+			}
+			//Aktualizacja populacji rodzicielskiej, kopia najlepszych osobników
+			for (int i = 0; i < mi; ++i)
+				P[i] = Pm[i];
+			if (solution::f_calls > Nmax)
+				break;
+		}
+		//Zwrot rozwiązania z ostatniej iteracji w przypadku przekroczenia ilośi
+		P[0].flag = 0;
+		return P[0];
+	}
+	catch (string ex_info)
+	{
+		throw ("solution EA(...):\n" + ex_info);
+	}
+}*/

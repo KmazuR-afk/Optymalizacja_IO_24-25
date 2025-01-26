@@ -492,40 +492,30 @@ void lab5()
 
 void lab6()
 {
-	double sigma[5] = { 0.01, 0.1, 1, 10, 100 };
-	solution EAf;
-	int N = 2; 
-	matrix lb(N, 1), ub(N,1);
-	lb = matrix(2, 1, -5);
-	ub = matrix(2, 1, 5);
+	//Problem testowy
+	double sigma[5] = { 0.01, 0.1, 1, 10, 100 }; //zadane z instrukcji współczynniki mutacji sigma
+	int N = 2; //liczba zmiennych decyzyjnych
+	matrix lb(N, 1), ub(N, 1);
+	lb = matrix(2, 1, -5); //dolny przedział poszukwiań
+	ub = matrix(2, 1, 5); //górny przedział poszukiwań
 
-	int mi = 20;
+	//Parametry dla algortymu EA
+	int mi = 18;
 	int lambda = 40;
-	double epsilon = 1e-5;
-	int Nmax = 10000;
+	double epsilon = 1e-4;
+	int Nmax = 100000;
 
-	// matrix sigma(2, 1, 1);
-
-
-	matrix saving(4, 1, 0.);
-	ofstream myfile;
-	myfile.open("optymalizacja_5_t1.csv");
-	for (int a = 0; a < 5; a++) {
+	solution EA_sol;
+	//matrix saving(4, 1, 0.);
+	ofstream file;
+	file.open("problem_testowy_5.csv");
+	for (int a = 0; a < 1; a++) {
 		for (int i = 0; i < 100; i++) {
-			EAf = EA(ff6T, N, lb, ub, mi, lambda, sigma[a], epsilon, Nmax);
-			saving(0) = EAf.x(0);
-			saving(1) = EAf.x(1);
-			saving(2) = EAf.y(0);
-			saving(3) = solution::f_calls;
-			string min;
-			if (solution::f_calls > 10000)
-				min = "NIE";
-			else
-				min = "TAK";
-			myfile << trans(saving) << ";" << min << "\n";
-			cout << EAf << endl;
+			EA_sol = EA(ff6T, N, lb, ub, mi, lambda, sigma[a], epsilon, Nmax);
+			file << EA_sol.x(0) << ";" << EA_sol.x(1) << ";" << EA_sol.y(0) << ";" << solution::f_calls << endl;
+			solution::clear_calls();
 		}
 	}
-	myfile.close();
+	file.close();
 }
 
