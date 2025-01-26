@@ -521,5 +521,18 @@ void lab6()
 	odczyt >> dane_txt;
 
 	cout << dane_txt;
+	matrix lb = matrix(2, 1, 0.1); //dolny przedział
+	matrix ub = matrix(2, 1, 3); //górny przedział
+
+	int N = 2;
+	int mi = 18;
+	int lambda = 40;
+	double epsilon = 1e-4;
+	int Nmax = 100000;
+	solution EA_sol;
+	EA_sol = EA(ff6R, N, lb, ub, mi, lambda, matrix(2, 1, 1), epsilon, Nmax, 1001, dane_txt);
+
+	matrix Y0(4, 1);
+	matrix* Y_rozw = solve_ode(df6R, 0, 0.1, 100, NAN, EA_sol.x[0]);
 }
 

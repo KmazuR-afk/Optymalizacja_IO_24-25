@@ -384,29 +384,31 @@ matrix ff6T(matrix x, matrix ud1, matrix ud2) {
 
 matrix ff6R(matrix x, matrix ud1, matrix ud2) {
 	matrix y;
-	matrix YR(4, 1);
-	matrix* Y_sol = solve_ode(df6, 0, 0.1, 100, YR, ud1, x[0]);
+	matrix Y0(4, 1); //Początkowe położenie i prędkość - zerowe
+	matrix* Y_sol = solve_ode(df6R, 0, 0.1, 100, Y0, ud1, x[0]); //symulacja układu od t=0 do t=100s z krokiem 0.1s, x[0]
+	//to optymalizowane b1 i b2
+	//Obliczanie błedu między danymi rzeczywsitymi a wynikami symulacji kolejno dla x1 i x2
 	for (int i = 0; i < ud1(0); i++) {
 		y = y + abs(ud2(i, 0) - Y_sol[1](i, 0)) + abs(ud2(i, 1)) - Y_sol[1](i, 2);
 	}
-	y(0) = y(0) / (2 * ud1(0));
+	y(0) = y(0) / (2 * ud1(0)); //Normalizacja błędu
 	return y;
 }
 
-matrix df6(double t, matrix Y, matrix ud1, matrix ud2) {
-	double m1 = 5;
-	double m2 = 5;
-	double k1 = 1;
-	double k2 = 1;
-	double F = 1;
-	double b1 = ud2(0);
-	double b2 = ud2(0);
+matrix df6R(double t, matrix Y, matrix ud1, matrix ud2) {
+	double m1 = 5; //masa cięąrka m1 (kg)
+	double m2 = 5; //masa ciężarka m2 (kg)
+	double k1 = 1; //stała sprężystości k1 (N/m)
+	double k2 = 1; //stała sprężystości k2 (N/m)
+	double F = 1; //siła zewnętrzna (N)
+	double b1 = ud2(0); //tłumienie 1
+	double b2 = ud2(0); //tłumienie 2
 
-	matrix dY(4, 1);
-	dY(0) = Y(1);
-	dY(1) = (-b1 * Y(1) - b2 * (Y(1) - Y(3)) - k1 * Y(0) - k2 * (Y(0) - Y(2))) / m1;
-	dY(2) = Y(3);
-	dY(3) = (F + b2 * (Y(1) - Y(3)) + k2 * (Y(0) - Y(2))) / m2;
+	matrix dY(4, 1); //wektor pochodnych prędkości i przyspieszenia
+	dY(0) = Y(1); //prędkość dla m1
+	dY(1) = (-b1 * Y(1) - b2 * (Y(1) - Y(3)) - k1 * Y(0) - k2 * (Y(0) - Y(2))) / m1; //przyspieszenie dla m1
+	dY(2) = Y(3); //prędkość dla m2
+	dY(3) = (F + b2 * (Y(1) - Y(3)) + k2 * (Y(0) - Y(2))) / m2; //przyspieszenie dla m2
 
 	return dY;
 }
