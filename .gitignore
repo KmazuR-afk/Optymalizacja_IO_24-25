@@ -1,0 +1,9 @@
+.vscode/
+
+*.exe
+*.txt
+*.csv
+*.o
+ode_solver.*
+solution*
+matrix*
