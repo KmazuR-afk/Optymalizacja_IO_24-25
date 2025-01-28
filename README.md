@@ -53,3 +53,18 @@ implementowane były funkcje jednej zmiennej (metody ekspansji, Fibonacciego, in
 ## Algorytm ewolucyjny
 
 ## Uruchamianie
+
+W celu przeprowadzenia wyłącznie kompilacji:
+```bash
+make
+```
+W celu przeprowadzenia kompilacji, uruchomienia programu i usunięcia po zakończeniu plików *.o:
+```bash
+make run
+```
+W celu usunięcia plików *.o i *.csv wygenerowanych w wyniku działania programu:
+```bash
+make clean
+```
+
+Aby zmieniać uruchamiane funkcje należy przeanalizować [main.cpp](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/main.cpp) i edytować go zgodnie ze swoimi potrzebami.
