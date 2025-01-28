@@ -6,7 +6,7 @@ Projekt pisany podczas realizowania przedmiotu Optymalziacja w ramach programu s
 ## Spis treści
 - [Metody bezgradientowe](#metody-bezgradientowe)
   - [Metoda ekspansji](#metoda-ekspansji)
-  - [Metoda Fibbonaciego](#metoda-fibbonaciego)
+  - [Metoda Fibonacciego](#metoda-fibonacciego)
   - [Metoda interpolacji Lagrange'a](#metoda-inetrpolacji-lagrangea)
 - [Metody gradientowe](#metody-gradientowe)
 - [Optymalizacja wielokryterialna](#optymalizacja-wielokryterialna)
@@ -14,11 +14,11 @@ Projekt pisany podczas realizowania przedmiotu Optymalziacja w ramach programu s
 
 ## Metody bezgradientowe
 Najprostsze z metod wyznaczania najmniejszego rozwiązania. Są najbardziej złożone obliczeniowo, ale najmniej skomplikowane - wyznaczają rozwiązania posługując sie wawrtościami funkcji w badanych punktach. W pierwszej kolejności
-implementowane były funkcje jednowymiarowe (metody eksp
+implementowane były funkcje jednej zmiennej (metody ekspansji, Fibonacciego, interpolacji Lagrange'a), wielu zmiennych (metoda Hooke'a-Jeevesa, Rosenbrocka) i wielu zmiennych z ograniczeniami (metoda sympleksu Neldera-Meada i podstawowe funkcje kary).
 
 ### Metoda ekspansji
 
-### Metoda Fibbonaciego
+### Metoda Fibonacciego
 
 ### Metoda interpolacji Lagrange'a
 
