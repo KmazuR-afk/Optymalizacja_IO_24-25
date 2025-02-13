@@ -27,16 +27,28 @@ Najprostsze z metod wyznaczania najmniejszego rozwiązania. Są najbardziej zło
 implementowane były funkcje jednej zmiennej (metody ekspansji, Fibonacciego, interpolacji Lagrange'a), wielu zmiennych (metoda Hooke'a-Jeevesa, Rosenbrocka) i wielu zmiennych z ograniczeniami (metoda sympleksu Neldera-Meada i podstawowe funkcje kary).
 
 ### Metoda ekspansji
-[Odsyłacz do kodu]([htt](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L34-L91)
+[Odsyłacz do kodu](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L34-L91)
 ### Metoda Fibonacciego
-
+[Odsyłacz do kodu](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L93-L140)
 ### Metoda interpolacji Lagrange'a
-
+[Odsyłacz do kodu](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L142-L216)
 ### Metoda Hooke'a-Jeevesa
+[Odsyłacz do kodu](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L218-L313)
+<p align="center">
+  <img src="https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/img/Screenshot%20from%202025-02-13%2019-06-03.png" alt="Wykres kroków zawężania przedziału" height="500">
+</p>
 
 ### Metoda Rosenbrocka
+[Odsyłacz do kodu](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L315-L411)
+<p align="center">
+  <img src="https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/img/Screenshot%20from%202025-02-13%2019-06-21.png" alt="Wykres kroków zawężania przedziału" height="500">
+</p>
 
 ### Metoda sympleksu Neldera-Meada i podstawowe funkcje kary
+[Odsyłacz do kodu](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L413-L561)
+<p align="center">
+  <img src="https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/img/Screenshot%20from%202025-02-13%2019-06-21.png" alt="Wykres kroków zawężania przedziału" height="500">
+</p>
 
 ## Metody gradientowe
 
