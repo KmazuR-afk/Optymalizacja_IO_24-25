@@ -73,7 +73,7 @@ implementowane były funkcje jednej zmiennej (metody ekspansji, Fibonacciego, in
 ### Metoda Powell'a
 [Odsyłacz do kodu](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L741-L791)
 <p align="center">
-  <img src="https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/img/CDSDN1.png" alt="Wykres kroków zawężania przedziału" height="500">
+  <img src="https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/img/Screenshot%20from%202025-02-13%2019-42-24.png" alt="Wykres kroków zawężania przedziału" height="500">
 </p>
 
 ## Algorytm ewolucyjny
