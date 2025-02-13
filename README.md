@@ -27,7 +27,7 @@ Najprostsze z metod wyznaczania najmniejszego rozwiązania. Są najbardziej zło
 implementowane były funkcje jednej zmiennej (metody ekspansji, Fibonacciego, interpolacji Lagrange'a), wielu zmiennych (metoda Hooke'a-Jeevesa, Rosenbrocka) i wielu zmiennych z ograniczeniami (metoda sympleksu Neldera-Meada i podstawowe funkcje kary).
 
 ### Metoda ekspansji
-
+[Odsyłacz do kodu]([htt](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L34-L91)
 ### Metoda Fibonacciego
 
 ### Metoda interpolacji Lagrange'a
