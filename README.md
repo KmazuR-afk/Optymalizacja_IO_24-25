@@ -47,22 +47,40 @@ implementowane były funkcje jednej zmiennej (metody ekspansji, Fibonacciego, in
 ### Metoda sympleksu Neldera-Meada i podstawowe funkcje kary
 [Odsyłacz do kodu](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L413-L561)
 <p align="center">
-  <img src="https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/img/Screenshot%20from%202025-02-13%2019-06-21.png" alt="Wykres kroków zawężania przedziału" height="500">
+  <img src="https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/img/Screenshot%20from%202025-02-13%2019-28-21.png" alt="Wykres kroków zawężania przedziału" height="500">
 </p>
 
 ## Metody gradientowe
 
 ### Metoda najszybszego spadku
-
+[Odsyłacz do kodu](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L563-L603)
 ### Metoda gradientów sprzężonych
-
+[Odsyłacz do kodu](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L606-L654)
 ### Metoda Newtona
+[Odsyłacz do kodu](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L656-L697)
+<p align="center">
+  <img src="https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/img/CDSDN1.png" alt="Wykres kroków zawężania przedziału" height="500">
+</p>
+<p align="center">
+  <img src="https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/img/CDSDN2.png" alt="Wykres kroków zawężania przedziału" height="500">
+</p>
+<p align="center">
+  <img src="https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/img/CDSDN3.png" alt="Wykres kroków zawężania przedziału" height="500">
+</p>
 
 ## Optymalizacja wielokryterialna
 
 ### Metoda Powell'a
+[Odsyłacz do kodu](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L741-L791)
+<p align="center">
+  <img src="https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/img/CDSDN1.png" alt="Wykres kroków zawężania przedziału" height="500">
+</p>
 
 ## Algorytm ewolucyjny
+[Odsyłacz do kodu](https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/opt_alg.cpp#L794-L887)
+<p align="center">
+  <img src="https://github.com/KmazuR-afk/Optymalizacja_IO_24-25/blob/main/img/Screenshot%20from%202025-02-13%2019-12-52.png" alt="Wykres kroków zawężania przedziału" height="500">
+</p>
 
 ## Uruchamianie
 
